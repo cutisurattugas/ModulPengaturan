@@ -5,9 +5,9 @@ namespace Modules\Pengaturan\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Pengaturan\Entities\Golongan;
+use Modules\Pengaturan\Entities\Jabatan;
 
-class GolonganController extends Controller
+class JabatanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class GolonganController extends Controller
      */
     public function index()
     {
-        $gol = Golongan::latest()->paginate(10);
-        return view('pengaturan::golongan.index', compact('gol'));
+        $jabatan = Jabatan::latest()->paginate(10);
+        return view('pengaturan::jabatan.index', compact('jabatan'));
     }
 
     /**
@@ -36,15 +36,15 @@ class GolonganController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_golongan' => 'required|string|max:255',
-            'deskripsi' => 'required',
+            'nama_jabatan' => 'required|string|max:255',
+            'tipe_jabatan' => 'required',
         ]);
 
-        Golongan::create([
-            'nama_golongan' => $request->nama_golongan,
-            'deskripsi' => $request->deskripsi,
+        Jabatan::create([
+            'nama_jabatan' => $request->nama_jabatan,
+            'tipe_jabatan' => $request->tipe_jabatan,
         ]);
-        return redirect()->back()->with('success', 'Golongan berhasil ditambahkan!');
+        return redirect()->back()->with('success', 'Jabatan berhasil ditambahkan!');
     }
 
     /**
@@ -75,13 +75,12 @@ class GolonganController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
-        $gol = Golongan::findOrFail($id);
-        $gol->update([
-            'nama_golongan' => $request->nama_golongan,
-            'deskripsi' => $request->deskripsi,
+        $jabatan = Jabatan::findOrFail($id);
+        $jabatan->update([
+            'nama_jabatan' => $request->nama_jabatan,
+            'tipe_jabatan' => $request->tipe_jabatan,
         ]);
-        return redirect()->back()->with('success', 'Golongan berhasil diperbarui!');
+        return redirect()->back()->with('success', 'Jabatan berhasil diperbarui!');
     }
 
     /**
@@ -91,8 +90,8 @@ class GolonganController extends Controller
      */
     public function destroy($id)
     {
-        $gol = Golongan::findOrFail($id);
-        $gol->delete();
-        return redirect()->back()->with('success', 'Golongan berhasil dihapus!');
+        $jabatan = Jabatan::findOrFail($id);
+        $jabatan->delete();
+        return redirect()->back()->with('success', 'Jabatan berhasil dihapus!');
     }
 }
