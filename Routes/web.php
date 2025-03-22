@@ -21,4 +21,11 @@ Route::prefix('pengaturan')->group(function() {
         Route::put('/update/{id}', 'UnitController@update')->name('unit.update');
         Route::delete('/destroy/{id}', 'UnitController@destroy')->name('unit.destroy');
     });
+    // Golongan
+    Route::prefix('golongan')->group(function() {
+        Route::get('/', 'GolonganController@index')->name('golongan.index');
+        Route::post('/store', 'GolonganController@store')->name('golongan.store');
+        Route::put('/update/{id}', 'GolonganController@update')->name('golongan.update');
+        Route::delete('/destroy/{id}', 'GolonganController@destroy')->name('golongan.destroy');
+    });
 });
