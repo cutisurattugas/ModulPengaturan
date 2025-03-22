@@ -42,11 +42,35 @@ class MenuModulPengaturanTableSeeder extends Seeder
         if ($menu) {
             Menu::create([
                 'modul' => 'Pengaturan',
+                'label' => 'Golongan',
+                'url' => 'pengaturan/golongan',
+                'can' => serialize(['admin']),
+                'icon' => 'far fa-circle',
+                'urut' => 3,
+                'parent_id' => $menu->id,
+                'active' => serialize(['pengaturan/golongan', 'pengaturan/golongan*']),
+            ]);
+        }
+        if ($menu) {
+            Menu::create([
+                'modul' => 'Pengaturan',
+                'label' => 'Jabatan',
+                'url' => 'pengaturan/jabatan',
+                'can' => serialize(['admin']),
+                'icon' => 'far fa-circle',
+                'urut' => 4,
+                'parent_id' => $menu->id,
+                'active' => serialize(['pengaturan/jabatan', 'pengaturan/jabatan*']),
+            ]);
+        }
+        if ($menu) {
+            Menu::create([
+                'modul' => 'Pengaturan',
                 'label' => 'Pegawai',
                 'url' => 'pengaturan/pegawai',
                 'can' => serialize(['admin']),
                 'icon' => 'far fa-circle',
-                'urut' => 3,
+                'urut' => 5,
                 'parent_id' => $menu->id,
                 'active' => serialize(['pengaturan/pegawai', 'pengaturan/pegawai*']),
             ]);
@@ -58,7 +82,7 @@ class MenuModulPengaturanTableSeeder extends Seeder
                 'url' => 'pengaturan/pejabat',
                 'can' => serialize(['admin']),
                 'icon' => 'far fa-circle',
-                'urut' => 4,
+                'urut' => 6,
                 'parent_id' => $menu->id,
                 'active' => serialize(['pengaturan/pejabat', 'pengaturan/pejabat*']),
             ]);
@@ -70,7 +94,7 @@ class MenuModulPengaturanTableSeeder extends Seeder
                 'url' => 'pengaturan/tim-kerja',
                 'can' => serialize(['admin']),
                 'icon' => 'far fa-circle',
-                'urut' => 5,
+                'urut' => 7,
                 'parent_id' => $menu->id,
                 'active' => serialize(['pengaturan/tim-kerja', 'pengaturan/tim-kerja*']),
             ]);

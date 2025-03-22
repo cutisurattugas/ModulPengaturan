@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-@section('title', 'Unit')
+@section('title', 'Golongan')
 @section('content_header')
     <h1 class="m-0 text-dark"></h1>
 @stop
@@ -8,11 +8,11 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h1>Unit</h1>
+                    <h1>Golongan</h1>
                     <div class="lead">
-                        Manaje Unit.
+                        Manaje Golongan.
                         <a href="#" class="btn btn-primary btn-sm float-right" data-toggle="modal"
-                            data-target="#modalTambahUnit">Tambah Unit</a>
+                            data-target="#modalTambahGolongan">Tambah Golongan</a>
 
                     </div>
 
@@ -26,26 +26,33 @@
                             <th>
                                 <center>Nama </center>
                             </th>
+                            <th>
+                                <center>Deskripsi </center>
+                            </th>
                             <th colspan="2">
                                 <center>Opsi</center>
                             </th>
                         </tr>
-                        @foreach ($units as $item)
+                        @foreach ($gol as $items)
                             <tr>
                                 <td>
                                     <center>{{ $loop->iteration }}</center>
                                 </td>
                                 <td>
-                                    {{ $item->nama }}
+                                    {{ $items->nama_golongan }}
+                                </td>
+                                <td>
+                                    <center>{{ Str::limit($items->deskripsi, 50, '...') }}</center>
                                 </td>
                                 <td>
                                     <center>
                                         <a class="btn btn-warning btn-sm" data-toggle="modal"
-                                            data-target="#modalEditUnit{{ $item->id }}">
+                                            data-target="#modalEditGolongan{{ $items->id }}">
                                             <i class="nav-icon fas fa-edit"></i>
                                         </a>
 
-                                        <form action="{{route('unit.destroy', $item->id)}}" method="POST" class="d-inline delete-form">
+                                        <form action="{{ route('golongan.destroy', $items->id) }}" method="POST"
+                                            class="d-inline delete-form">
                                             @csrf
                                             @method('DELETE')
 
@@ -57,17 +64,17 @@
                                     </center>
                                 </td>
                             </tr>
-                            <!-- Modal Edit Unit -->
-                            <div class="modal fade" id="modalEditUnit{{ $item->id }}" tabindex="-1" role="dialog"
-                                aria-labelledby="modalEditUnitLabel{{ $item->id }}" aria-hidden="true">
+                            <!-- Modal Edit Golongan -->
+                            <div class="modal fade" id="modalEditGolongan{{ $items->id }}" tabindex="-1" role="dialog"
+                                aria-labelledby="modalEditGolonganLabel{{ $items->id }}" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
-                                    <form action="{{ route('unit.update', $item->id) }}" method="POST">
+                                    <form action="{{ route('golongan.update', $items->id) }}" method="POST">
                                         @csrf
                                         @method('PUT')
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="modalEditUnitLabel{{ $item->id }}">Edit Unit
-                                                </h5>
+                                                <h5 class="modal-title" id="modalEditGolonganLabel{{ $items->id }}">Edit
+                                                    Golongan</h5>
                                                 <button type="button" class="close" data-dismiss="modal"
                                                     aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
@@ -76,9 +83,13 @@
                                             <div class="modal-body">
 
                                                 <div class="form-group">
-                                                    <label for="nama">Nama Unit</label>
-                                                    <input type="text" name="nama" class="form-control"
-                                                        value="{{ $item->nama }}" required>
+                                                    <label for="nama">Nama Golongan</label>
+                                                    <input type="text" name="nama_golongan" class="form-control"
+                                                        value="{{ $items->nama_golongan }}" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="deskripsi">Deskripsi</label>
+                                                    <textarea class="form-control" name="deskripsi" id="deskripsi" cols="30" rows="5">{{ $items->deskripsi }}</textarea>
                                                 </div>
 
                                             </div>
@@ -95,31 +106,35 @@
                     </table>
                     <br>
                     <div class="d-flex">
-                        {!! $units->links('pagination::bootstrap-4') !!}
+                        {!! $gol->links('pagination::bootstrap-4') !!}
                     </div>
 
                 </div>
             </div>
         </div>
     </div>
-    <!-- Modal Tambah Unit -->
-    <div class="modal fade" id="modalTambahUnit" tabindex="-1" role="dialog" aria-labelledby="modalTambahUnitLabel"
-        aria-hidden="true">
+    <!-- Modal Tambah Golongan -->
+    <div class="modal fade" id="modalTambahGolongan" tabindex="-1" role="dialog"
+        aria-labelledby="modalTambahGolonganLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <form action="{{ route('unit.store') }}" method="POST">
+            <form action="{{ route('golongan.store') }}" method="POST">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalTambahUnitLabel">Tambah Unit Baru</h5>
+                        <h5 class="modal-title" id="modalTambahGolonganLabel">Tambah Golongan Baru</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="nama">Nama Unit</label>
-                            <input type="text" name="nama" class="form-control" placeholder="Masukkan Nama Unit"
-                                required>
+                            <label for="nama">Nama Golongan</label>
+                            <input type="text" name="nama_golongan" class="form-control"
+                                placeholder="Masukkan Nama Golongan" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nama">Deskripsi</label>
+                            <textarea class="form-control" name="deskripsi" id="deskripsi" cols="30" rows="5"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
