@@ -28,4 +28,11 @@ Route::prefix('pengaturan')->group(function() {
         Route::put('/update/{id}', 'GolonganController@update')->name('golongan.update');
         Route::delete('/destroy/{id}', 'GolonganController@destroy')->name('golongan.destroy');
     });
+    // jabatan
+    Route::prefix('jabatan')->group(function() {
+        Route::get('/', 'JabatanController@index')->name('jabatan.index');
+        Route::post('/store', 'JabatanController@store')->name('jabatan.store');
+        Route::put('/update/{id}', 'JabatanController@update')->name('jabatan.update');
+        Route::delete('/destroy/{id}', 'JabatanController@destroy')->name('jabatan.destroy');
+    });
 });
