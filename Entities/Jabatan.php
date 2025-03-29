@@ -12,4 +12,9 @@ class Jabatan extends Model
     protected $table = 'jabatan';
     protected $primaryKey = 'id';
     protected $fillable = ['nama_jabatan', 'tipe_jabatan'];
+
+    public function pejabat()
+    {
+        return $this->hasMany(Pejabat::class, 'jabatan_id', 'id');
+    }
 }

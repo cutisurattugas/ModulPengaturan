@@ -17,6 +17,6 @@ class PengaturanDatabaseSeeder extends Seeder
         Model::unguard();
 
         $this->call(MenuModulPengaturanTableSeeder::class);
-
+        $this->call(GolonganDataTableSeeder::class);
     }
 }

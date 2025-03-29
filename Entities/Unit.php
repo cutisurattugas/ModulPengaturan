@@ -12,4 +12,9 @@ class Unit extends Model
     protected $table = 'units';
     protected $primaryKey = 'id';
     protected $fillable = ['nama'];
+
+    public function timKerja()
+    {
+        return $this->hasMany(TimKerja::class, 'unit_id', 'id');
+    }
 }
