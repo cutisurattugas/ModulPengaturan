@@ -9,10 +9,27 @@ class Pejabat extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
-    
-    protected static function newFactory()
+    protected $table = 'pejabat';
+    protected $primaryKey = 'id';
+    protected $fillable = ['periode_mulai', 'periode_selesai', 'status', 'pegawai_id', 'unit_id', 'jabatan_id'];
+
+    public function pegawai()
     {
-        return \Modules\Pengaturan\Database\factories\PejabatFactory::new();
+        return $this->belongsTo(Pegawai::class, 'pegawai_id', 'id');
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'unit_id', 'id');
+    }
+
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class, 'jabatan_id', 'id');
+    }
+
+    public function timKerja()
+    {
+        return $this->hasMany(TimKerja::class, 'pejabat_id', 'id');
     }
 }

@@ -9,10 +9,12 @@ class Pegawai extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
-    
-    protected static function newFactory()
+    protected $table = 'pegawai';
+    protected $primaryKey = 'id';
+    protected $fillable = ['nip', 'nik', 'nama_lengkap', 'email', 'no_hp', 'alamat'];
+
+    public function timKerja()
     {
-        return \Modules\Pengaturan\Database\factories\PegawaiFactory::new();
+        return $this->hasMany(TimKerja::class, 'pegawai_id', 'id');
     }
 }
