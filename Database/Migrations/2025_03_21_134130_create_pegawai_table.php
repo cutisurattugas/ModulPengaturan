@@ -21,6 +21,10 @@ class CreatePegawaiTable extends Migration
             $table->string('email');
             $table->string('no_hp');
             $table->text('alamat');
+            $table->unsignedBigInteger('golongan_id');
+            $table->unsignedBigInteger('jabatan_id');
+            $table->foreign('golongan_id')->references('id')->on('golongan')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('jabatan_id')->references('id')->on('jabatan')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

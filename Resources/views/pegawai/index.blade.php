@@ -24,13 +24,13 @@
                         <tr>
                             <th width="1%">No</th>
                             <th>
-                                <center>Nama </center>
+                                <center>Nama</center>
                             </th>
                             <th>
-                                <center>NIP </center>
+                                <center>NIP</center>
                             </th>
                             <th>
-                                <center>Email</center>
+                                <center>Pangkat/Gol</center>
                             </th>
                             <th>
                                 <center>No HP</center>
@@ -54,7 +54,7 @@
                                     {{ $item->nip }}
                                 </td>
                                 <td>
-                                    {{ $item->email }}
+                                    {{ $item->golongan->nama_golongan }} - {{ $item->jabatan->nama_jabatan }}
                                 </td>
                                 <td>
                                     {{ $item->no_hp }}
@@ -99,6 +99,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="row">
+                                                    <!-- Kolom 1 -->
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="nama_lengkap">Nama Lengkap</label>
@@ -119,8 +120,21 @@
                                                                 oninput="this.value=this.value.replace(/[^0-9]/g,'');"
                                                                 required>
                                                         </div>
+                                                        <div class="form-group">
+                                                            <label for="golongan_id">Golongan</label>
+                                                            <select name="golongan_id" class="form-control" required>
+                                                                <option value="">-- Pilih Golongan --</option>
+                                                                @foreach ($golongan as $g)
+                                                                    <option value="{{ $g->id }}"
+                                                                        {{ $item->golongan_id == $g->id ? 'selected' : '' }}>
+                                                                        {{ $g->nama_golongan }} - {{ $g->deskripsi }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
                                                     </div>
 
+                                                    <!-- Kolom 2 -->
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="email">Email</label>
@@ -133,6 +147,18 @@
                                                                 value="{{ $item->no_hp }}"
                                                                 oninput="this.value=this.value.replace(/[^0-9]/g,'');"
                                                                 required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="jabatan_id">Jabatan</label>
+                                                            <select name="jabatan_id" class="form-control" required>
+                                                                <option value="">-- Pilih Jabatan --</option>
+                                                                @foreach ($jabatan as $j)
+                                                                    <option value="{{ $j->id }}"
+                                                                        {{ $item->jabatan_id == $j->id ? 'selected' : '' }}>
+                                                                        {{ $j->nama_jabatan }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="alamat">Alamat</label>
@@ -162,8 +188,8 @@
         </div>
     </div>
     <!-- Modal Tambah Pegawai -->
-    <div class="modal fade" id="modalTambahPegawai" tabindex="-1" role="dialog" aria-labelledby="modalTambahPegawaiLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="modalTambahPegawai" tabindex="-1" role="dialog"
+        aria-labelledby="modalTambahPegawaiLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <form action="{{ route('pegawai.store') }}" method="POST">
                 @csrf
@@ -195,6 +221,16 @@
                                         placeholder="Masukkan NIK Pegawai" required
                                         oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                                 </div>
+                                <div class="form-group">
+                                    <label for="golongan_id">Golongan</label>
+                                    <select name="golongan_id" class="form-control" required>
+                                        <option value="">-- Pilih Golongan --</option>
+                                        @foreach ($golongan as $g)
+                                            <option value="{{ $g->id }}">{{ $g->nama_golongan }} -
+                                                {{ $g->deskripsi }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
 
                             <!-- Kolom 2 -->
@@ -209,6 +245,15 @@
                                     <input type="text" name="no_hp" class="form-control"
                                         placeholder="Masukkan No HP Pegawai" required
                                         oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                                </div>
+                                <div class="form-group">
+                                    <label for="jabatan_id">Jabatan</label>
+                                    <select name="jabatan_id" class="form-control" required>
+                                        <option value="">-- Pilih Jabatan --</option>
+                                        @foreach ($jabatan as $j)
+                                            <option value="{{ $j->id }}">{{ $j->nama_jabatan }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="alamat">Alamat</label>
