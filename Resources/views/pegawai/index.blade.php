@@ -82,8 +82,6 @@
                                     </center>
                                 </td>
                             </tr>
-
-                            <!-- Modal Edit Pegawai -->
                             <!-- Modal Edit Pegawai -->
                             <div class="modal fade" id="modalEditPegawai{{ $item->id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="modalEditPegawaiLabel" aria-hidden="true">
