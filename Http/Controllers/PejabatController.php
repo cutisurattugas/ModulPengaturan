@@ -5,6 +5,11 @@ namespace Modules\Pengaturan\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Storage;
+use Modules\Pengaturan\Entities\Jabatan;
+use Modules\Pengaturan\Entities\Pegawai;
+use Modules\Pengaturan\Entities\Pejabat;
+use Modules\Pengaturan\Entities\Unit;
 
 class PejabatController extends Controller
 {
@@ -14,7 +19,11 @@ class PejabatController extends Controller
      */
     public function index()
     {
-        return view('pengaturan::index');
+        $unit = Unit::all();
+        $jabatan = Jabatan::where('tipe_jabatan', 'Struktural')->get();
+        $pegawai = Pegawai::all();
+        $pejabat = Pejabat::paginate(10);
+        return view('pengaturan::pejabat.index', compact('pejabat', 'pegawai', 'jabatan', 'unit'));
     }
 
     /**
@@ -33,7 +42,36 @@ class PejabatController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request);
+        $request->validate([
+            'pegawai_id' => 'required|exists:pegawai,id',
+            'periode_mulai' => 'required|date',
+            'periode_selesai' => 'nullable|date|after_or_equal:periode_mulai',
+            'status' => 'required|boolean',
+            'unit_id' => 'required|exists:units,id',
+            'jabatan_id' => 'required|exists:jabatan,id',
+            'sk' => 'required|file|mimes:pdf|max:2048',
+        ]);
+
+        if ($request->hasFile('sk')) {
+            $file = $request->file('sk');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('uploads/sk', $fileName, 'public');
+        } else {
+            return back()->with('error', 'File SK wajib diunggah.');
+        }
+
+        Pejabat::create([
+            'pegawai_id' => $request->pegawai_id,
+            'periode_mulai' => $request->periode_mulai,
+            'periode_selesai' => $request->periode_selesai,
+            'status' => $request->status,
+            'unit_id' => $request->unit_id,
+            'jabatan_id' => $request->jabatan_id,
+            'sk' => $filePath,
+        ]);
+
+        return redirect()->back()->with('success', 'Pejabat berhasil ditambahkan.');
     }
 
     /**
@@ -64,9 +102,43 @@ class PejabatController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-    }
+        $pejabat = Pejabat::findOrFail($id);
 
+        $request->validate([
+            'pegawai_id' => 'required|exists:pegawai,id',
+            'periode_mulai' => 'required|date',
+            'periode_selesai' => 'nullable|date',
+            'status' => 'required|in:0,1',
+            'unit_id' => 'required|exists:units,id',
+            'jabatan_id' => 'required|exists:jabatan,id',
+            'sk' => 'nullable|mimes:pdf|max:2048',
+        ]);
+
+        $data = [
+            'pegawai_id' => $request->pegawai_id,
+            'periode_mulai' => $request->periode_mulai,
+            'periode_selesai' => $request->periode_selesai,
+            'status' => $request->status,
+            'unit_id' => $request->unit_id,
+            'jabatan_id' => $request->jabatan_id,
+        ];
+
+        if ($request->hasFile('sk')) {
+            if ($pejabat->sk && Storage::exists('public/uploads/sk/' . $pejabat->sk)) {
+                Storage::delete('public/uploads/sk/' . $pejabat->sk);
+            }
+
+            $file = $request->file('sk');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/uploads/sk', $fileName);
+            $data['sk'] = 'uploads/sk/' . $fileName;
+        }
+
+        $pejabat->update($data);
+
+        return redirect()->back()->with('success', 'Data Pejabat berhasil diperbarui.');
+    }
+    
     /**
      * Remove the specified resource from storage.
      * @param int $id
@@ -74,6 +146,8 @@ class PejabatController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $pejabat = Pejabat::findOrFail($id);
+        $pejabat->delete();
+        return redirect()->back()->with('success', 'Data Pejabat berhasil dihapus.');
     }
 }

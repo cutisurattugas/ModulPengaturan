@@ -42,4 +42,11 @@ Route::prefix('pengaturan')->group(function() {
         Route::put('/update/{id}', 'PegawaiController@update')->name('pegawai.update');
         Route::delete('/destroy/{id}', 'PegawaiController@destroy')->name('pegawai.destroy');
     });
+    // Pejabat
+    Route::prefix('pejabat')->group(function() {
+        Route::get('/', 'PejabatController@index')->name('pejabat.index');
+        Route::post('/store', 'PejabatController@store')->name('pejabat.store');
+        Route::put('/update/{id}', 'PejabatController@update')->name('pejabat.update');
+        Route::delete('/destroy/{id}', 'PejabatController@destroy')->name('pejabat.destroy');
+    });
 });
