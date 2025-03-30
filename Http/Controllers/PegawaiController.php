@@ -5,6 +5,8 @@ namespace Modules\Pengaturan\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Pengaturan\Entities\Golongan;
+use Modules\Pengaturan\Entities\Jabatan;
 use Modules\Pengaturan\Entities\Pegawai;
 
 class PegawaiController extends Controller
@@ -15,8 +17,10 @@ class PegawaiController extends Controller
      */
     public function index()
     {
+        $golongan = Golongan::all();
+        $jabatan = Jabatan::all();
         $pegawai = Pegawai::paginate(10);
-        return view('pengaturan::pegawai.index', compact('pegawai'));
+        return view('pengaturan::pegawai.index', compact('pegawai', 'jabatan', 'golongan'));
     }
 
     /**
@@ -42,6 +46,8 @@ class PegawaiController extends Controller
             'email' => 'required|email|unique:pegawai,email|max:255',
             'no_hp' => 'required|string|max:15',
             'alamat' => 'required|string|max:500',
+            'golongan_id' => 'required|string|max:255',
+            'jabatan_id' => 'required|string|max:255',
         ]);
 
         Pegawai::create([
@@ -51,6 +57,8 @@ class PegawaiController extends Controller
             'email' => $request->email,
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
+            'golongan_id' => $request->golongan_id,
+            'jabatan_id' => $request->jabatan_id,
         ]);
         return redirect()->back()->with('success', 'Pegawai berhasil ditambahkan!');
     }
@@ -90,6 +98,8 @@ class PegawaiController extends Controller
             'email' => 'required|email|max:255|unique:pegawai,email,' . $id,
             'no_hp' => 'required|string|max:15',
             'alamat' => 'required|string|max:500',
+            'golongan_id' => 'required|string|max:255',
+            'jabatan_id' => 'required|string|max:255',
         ]);
 
         $pegawai = Pegawai::findOrFail($id);
@@ -102,6 +112,8 @@ class PegawaiController extends Controller
             'email' => $request->email,
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
+            'golongan_id' => $request->golongan_id,
+            'jabatan_id' => $request->jabatan_id,
         ]);
         return redirect()->back()->with('success', 'Data pegawai berhasil diperbarui!');
     }
