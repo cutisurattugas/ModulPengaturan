@@ -11,7 +11,7 @@ class Pejabat extends Model
 
     protected $table = 'pejabat';
     protected $primaryKey = 'id';
-    protected $fillable = ['periode_mulai', 'periode_selesai', 'status', 'pegawai_id', 'unit_id', 'jabatan_id'];
+    protected $fillable = ['periode_mulai', 'periode_selesai', 'status', 'sk', 'pegawai_id', 'unit_id', 'jabatan_id'];
 
     public function pegawai()
     {

@@ -18,5 +18,7 @@ class PengaturanDatabaseSeeder extends Seeder
 
         $this->call(MenuModulPengaturanTableSeeder::class);
         $this->call(GolonganDataTableSeeder::class);
+        $this->call(JabatanDataTableSeeder::class);
+        $this->call(PegawaiDataTableSeeder::class);
     }
 }

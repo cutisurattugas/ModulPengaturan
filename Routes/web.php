@@ -35,4 +35,11 @@ Route::prefix('pengaturan')->group(function() {
         Route::put('/update/{id}', 'JabatanController@update')->name('jabatan.update');
         Route::delete('/destroy/{id}', 'JabatanController@destroy')->name('jabatan.destroy');
     });
+    // Pegawai
+    Route::prefix('pegawai')->group(function() {
+        Route::get('/', 'PegawaiController@index')->name('pegawai.index');
+        Route::post('/store', 'PegawaiController@store')->name('pegawai.store');
+        Route::put('/update/{id}', 'PegawaiController@update')->name('pegawai.update');
+        Route::delete('/destroy/{id}', 'PegawaiController@destroy')->name('pegawai.destroy');
+    });
 });
