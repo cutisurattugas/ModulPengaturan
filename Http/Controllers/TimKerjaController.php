@@ -5,6 +5,7 @@ namespace Modules\Pengaturan\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Pengaturan\Entities\Unit;
 
 class TimKerjaController extends Controller
 {
@@ -14,7 +15,8 @@ class TimKerjaController extends Controller
      */
     public function index()
     {
-        return view('pengaturan::index');
+        $unit = Unit::all();
+        return view('pengaturan::tim.index', compact('unit'));
     }
 
     /**

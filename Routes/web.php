@@ -49,4 +49,8 @@ Route::prefix('pengaturan')->group(function() {
         Route::put('/update/{id}', 'PejabatController@update')->name('pejabat.update');
         Route::delete('/destroy/{id}', 'PejabatController@destroy')->name('pejabat.destroy');
     });
+    // Tim Kerja
+    Route::prefix('tim-kerja')->group(function() {
+        Route::get('/', 'TimKerjaController@index')->name('tim.index');
+    });
 });
