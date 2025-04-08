@@ -18,9 +18,10 @@ class PegawaiController extends Controller
     public function index()
     {
         $golongan = Golongan::all();
-        $jabatan = Jabatan::all();
+        $jabatan_fungsional = Jabatan::where('tipe_jabatan', 'Fungsional')->get();
+        $jabatan_struktural = Jabatan::where('tipe_jabatan', 'Struktural')->get();
         $pegawai = Pegawai::paginate(10);
-        return view('pengaturan::pegawai.index', compact('pegawai', 'jabatan', 'golongan'));
+        return view('pengaturan::pegawai.index', compact('pegawai', 'jabatan_fungsional', 'jabatan_struktural', 'golongan'));
     }
 
     /**
@@ -47,7 +48,8 @@ class PegawaiController extends Controller
             'no_hp' => 'required|string|max:15',
             'alamat' => 'required|string|max:500',
             'golongan_id' => 'required|string|max:255',
-            'jabatan_id' => 'required|string|max:255',
+            'jabatan_struktural_id' => 'nullable|string|max:255',
+            'jabatan_fungsional_id' => 'nullable|string|max:255',
         ]);
 
         Pegawai::create([
@@ -58,8 +60,10 @@ class PegawaiController extends Controller
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
             'golongan_id' => $request->golongan_id,
-            'jabatan_id' => $request->jabatan_id,
+            'jabatan_struktural_id' => $request->jabatan_struktural_id,
+            'jabatan_fungsional_id' => $request->jabatan_fungsional_id,
         ]);
+
         return redirect()->back()->with('success', 'Pegawai berhasil ditambahkan!');
     }
 
@@ -99,12 +103,12 @@ class PegawaiController extends Controller
             'no_hp' => 'required|string|max:15',
             'alamat' => 'required|string|max:500',
             'golongan_id' => 'required|string|max:255',
-            'jabatan_id' => 'required|string|max:255',
+            'jabatan_struktural_id' => 'nullable|string|max:255',
+            'jabatan_fungsional_id' => 'nullable|string|max:255',
         ]);
 
         $pegawai = Pegawai::findOrFail($id);
 
-        // Update data pegawai
         $pegawai->update([
             'nip' => $request->nip,
             'nik' => $request->nik,
@@ -113,11 +117,14 @@ class PegawaiController extends Controller
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
             'golongan_id' => $request->golongan_id,
-            'jabatan_id' => $request->jabatan_id,
+            'jabatan_struktural_id' => $request->jabatan_struktural_id,
+            'jabatan_fungsional_id' => $request->jabatan_fungsional_id,
         ]);
+
         return redirect()->back()->with('success', 'Data pegawai berhasil diperbarui!');
     }
-    
+
+
     /**
      * Remove the specified resource from storage.
      * @param int $id

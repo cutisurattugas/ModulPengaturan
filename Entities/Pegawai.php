@@ -11,7 +11,7 @@ class Pegawai extends Model
 
     protected $table = 'pegawai';
     protected $primaryKey = 'id';
-    protected $fillable = ['nip', 'nik', 'nama_lengkap', 'email', 'no_hp', 'alamat', 'golongan_id', 'jabatan_id'];
+    protected $fillable = ['nip', 'nik', 'nama_lengkap', 'email', 'no_hp', 'alamat', 'golongan_id', 'jabatan_struktural_id', 'jabatan_fungsional_id'];
 
     public function timKerja()
     {
@@ -22,7 +22,11 @@ class Pegawai extends Model
         return $this->belongsTo(Golongan::class, 'golongan_id', 'id');
     }
 
-    public function jabatan(){
-        return $this->belongsTo(Jabatan::class, 'jabatan_id', 'id');
+    public function jabatan_struktural(){
+        return $this->belongsTo(Jabatan::class, 'jabatan_struktural_id', 'id');
+    }
+
+    public function jabatan_fungsional(){
+        return $this->belongsTo(Jabatan::class, 'jabatan_fungsional_id', 'id');
     }
 }

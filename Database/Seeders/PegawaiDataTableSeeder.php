@@ -25,8 +25,9 @@ class PegawaiDataTableSeeder extends Seeder
                 'email' => 'ahmad.pratama@example.com',
                 'no_hp' => '081234567891',
                 'alamat' => 'Jl. Merdeka No. 10, Jakarta',
-                'golongan_id' => '14',
-                'jabatan_id' => '13',
+                'golongan_id' => 14, // IV/b
+                'jabatan_struktural_id' => 1, // Direktur
+                'jabatan_fungsional_id' => 15, // Guru Besar
             ],
             [
                 'nip' => '1987020220221002',
@@ -35,8 +36,9 @@ class PegawaiDataTableSeeder extends Seeder
                 'email' => 'dewi.lestari@example.com',
                 'no_hp' => '082345678912',
                 'alamat' => 'Jl. Sudirman No. 20, Bandung',
-                'golongan_id' => '12',
-                'jabatan_id' => '13',
+                'golongan_id' => 13, // IV/a
+                'jabatan_struktural_id' => 2, // Wakil Direktur II
+                'jabatan_fungsional_id' => 14, // Lektor Kepala
             ],
             [
                 'nip' => '1987030320221003',
@@ -45,8 +47,9 @@ class PegawaiDataTableSeeder extends Seeder
                 'email' => 'budi.santoso@example.com',
                 'no_hp' => '083456789123',
                 'alamat' => 'Jl. Ahmad Yani No. 30, Surabaya',
-                'golongan_id' => '11',
-                'jabatan_id' => '13',
+                'golongan_id' => 12, // III/d
+                'jabatan_struktural_id' => 5, // Ketua Jurusan
+                'jabatan_fungsional_id' => 13, // Lektor
             ],
             [
                 'nip' => '1987040420221004',
@@ -55,8 +58,9 @@ class PegawaiDataTableSeeder extends Seeder
                 'email' => 'siti.rahmawati@example.com',
                 'no_hp' => '084567891234',
                 'alamat' => 'Jl. Diponegoro No. 40, Yogyakarta',
-                'golongan_id' => '11',
-                'jabatan_id' => '13',
+                'golongan_id' => 11, // III/c
+                'jabatan_struktural_id' => null, // Pegawai biasa
+                'jabatan_fungsional_id' => 11, // Dosen
             ],
         ]);
     }
