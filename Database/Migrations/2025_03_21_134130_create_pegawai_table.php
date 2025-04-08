@@ -22,9 +22,11 @@ class CreatePegawaiTable extends Migration
             $table->string('no_hp');
             $table->text('alamat');
             $table->unsignedBigInteger('golongan_id');
-            $table->unsignedBigInteger('jabatan_id');
+            $table->unsignedBigInteger('jabatan_struktural_id')->nullable();
+            $table->unsignedBigInteger('jabatan_fungsional_id');
             $table->foreign('golongan_id')->references('id')->on('golongan')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('jabatan_id')->references('id')->on('jabatan')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('jabatan_struktural_id')->references('id')->on('jabatan')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('jabatan_fungsional_id')->references('id')->on('jabatan')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

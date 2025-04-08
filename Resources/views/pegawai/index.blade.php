@@ -20,28 +20,22 @@
                         @include('layouts.partials.messages')
                     </div>
 
-                    <table class="table table-bordered">
-                        <tr>
-                            <th width="1%">No</th>
-                            <th>
-                                <center>Nama</center>
-                            </th>
-                            <th>
-                                <center>NIP</center>
-                            </th>
-                            <th>
-                                <center>Pangkat/Gol</center>
-                            </th>
-                            <th>
-                                <center>No HP</center>
-                            </th>
-                            <th>
-                                <center>Alamat</center>
-                            </th>
-                            <th colspan="2">
-                                <center>Opsi</center>
-                            </th>
-                        </tr>
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" style="vertical-align: middle; text-align: center; width: 40px;">No</th>
+                                <th rowspan="2" class="text-center align-middle">Nama</th>
+                                <th rowspan="2" class="text-center align-middle">NIP</th>
+                                <th rowspan="2" class="text-center align-middle">Golongan</th>
+                                <th rowspan="2" class="text-center align-middle">No HP</th>
+                                <th colspan="2" class="text-center">Jabatan</th>
+                                <th rowspan="2" class="text-center align-middle">Opsi</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center" style="width: 120px;">Struktural</th>
+                                <th class="text-center" style="width: 120px;">Fungsional</th>
+                            </tr>
+                        </thead>
                         @foreach ($pegawai as $item)
                             <tr>
                                 <td>
@@ -54,14 +48,13 @@
                                     {{ $item->nip }}
                                 </td>
                                 <td>
-                                    {{ $item->golongan->nama_golongan }} - {{ $item->jabatan->nama_jabatan }}
+                                    {{ $item->golongan->nama_golongan }} - {{ $item->golongan->deskripsi }}
                                 </td>
                                 <td>
                                     {{ $item->no_hp }}
                                 </td>
-                                <td>
-                                    {{ $item->alamat }}
-                                </td>
+                                <td>{{ $item->jabatan_struktural->nama_jabatan ?? '-' }}</td>
+                                <td>{{ $item->jabatan_fungsional->nama_jabatan ?? '-' }}</td>
                                 <td>
                                     <center>
                                         <a class="btn btn-warning btn-sm" data-toggle="modal"
@@ -149,21 +142,35 @@
                                                                 required>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="jabatan_id">Jabatan</label>
-                                                            <select name="jabatan_id" class="form-control" required>
-                                                                <option value="">-- Pilih Jabatan --</option>
-                                                                @foreach ($jabatan as $j)
-                                                                    <option value="{{ $j->id }}"
-                                                                        {{ $item->jabatan_id == $j->id ? 'selected' : '' }}>
-                                                                        {{ $j->nama_jabatan }}
+                                                            <label for="jabatan_struktural_id">Jabatan Struktural</label>
+                                                            <select name="jabatan_struktural_id" class="form-control">
+                                                                <option value="">-- Pilih Jabatan Struktural --
+                                                                </option>
+                                                                @foreach ($jabatan_struktural as $js)
+                                                                    <option value="{{ $js->id }}"
+                                                                        {{ $item->jabatan_struktural_id == $js->id ? 'selected' : '' }}>
+                                                                        {{ $js->nama_jabatan }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="alamat">Alamat</label>
-                                                            <textarea name="alamat" class="form-control" rows="3" required>{{ $item->alamat }}</textarea>
+                                                            <label for="jabatan_fungsional_id">Jabatan Fungsional</label>
+                                                            <select name="jabatan_fungsional_id" class="form-control">
+                                                                <option value="">-- Pilih Jabatan Fungsional --
+                                                                </option>
+                                                                @foreach ($jabatan_fungsional as $jf)
+                                                                    <option value="{{ $jf->id }}"
+                                                                        {{ $item->jabatan_fungsional_id == $jf->id ? 'selected' : '' }}>
+                                                                        {{ $jf->nama_jabatan }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="alamat">Alamat</label>
+                                                        <textarea name="alamat" class="form-control" cols="100" rows="3" required>{{ $item->alamat }}</textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -247,18 +254,28 @@
                                         oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                                 </div>
                                 <div class="form-group">
-                                    <label for="jabatan_id">Jabatan</label>
-                                    <select name="jabatan_id" class="form-control" required>
-                                        <option value="">-- Pilih Jabatan --</option>
-                                        @foreach ($jabatan as $j)
-                                            <option value="{{ $j->id }}">{{ $j->nama_jabatan }}</option>
+                                    <label for="jabatan_struktural_id">Jabatan Struktural</label>
+                                    <select name="jabatan_struktural_id" class="form-control">
+                                        <option value="">-- Pilih Jabatan Struktural --</option>
+                                        @foreach ($jabatan_struktural as $js)
+                                            <option value="{{ $js->id }}">{{ $js->nama_jabatan }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="alamat">Alamat</label>
-                                    <textarea name="alamat" class="form-control" rows="3" placeholder="Masukkan Alamat Pegawai" required></textarea>
+                                    <label for="jabatan_fungsional_id">Jabatan Fungsional</label>
+                                    <select name="jabatan_fungsional_id" class="form-control">
+                                        <option value="">-- Pilih Jabatan Fungsional --</option>
+                                        @foreach ($jabatan_fungsional as $jf)
+                                            <option value="{{ $jf->id }}">{{ $jf->nama_jabatan }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="alamat">Alamat</label>
+                                <textarea name="alamat" class="form-control" cols="100" rows="3" placeholder="Masukkan Alamat Pegawai"
+                                    required></textarea>
                             </div>
                         </div>
                     </div>
