@@ -36,125 +36,91 @@
                             Belum Punya Tim
                         </a>
                     </div>
-
-
                     <div class="mt-2">
                         @include('layouts.partials.messages')
                     </div>
 
                     <table class="table table-bordered">
+                        <!-- Root Tim Kerja -->
                         <tr>
-                            <th width="1%">
-                                <i class="nav-icon fas fa-folder-open"></i>
-                            </th>
-                            <th colspan="2">
-                                Politeknik Negeri Banyuwangi
-                            </th>
+                            <th width="1%"><i class="nav-icon fas fa-folder-open"></i></th>
+                            <th colspan="2">Politeknik Negeri Banyuwangi</th>
                             <th>
                                 <center>
                                     <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalEditPegawai">
                                         <i class="nav-icon fas fa-edit"></i>
                                     </a>
-
                                     <form action="#" method="POST" class="d-inline delete-form">
                                         @csrf
                                         @method('DELETE')
-
                                         <button type="button" class="btn btn-danger btn-sm delete-btn">
                                             <i class="nav-icon fas fa-trash"></i>
                                         </button>
                                     </form>
-
                                 </center>
                             </th>
                         </tr>
-                        <tr>
-                            <td>
-                            </td>
-                            <td width="1%">
-                                <center><i class="nav-icon fas fa-user"></i></center>
-                            </td>
-                            <td>
-                                M. Shofi`ul Amin [Ketua] <br>
-                                <small>
-                                    198605212015041002 |
-                                    Direktur Politeknik Negeri Banyuwangi |
-                                    Sudah Buat SKP dengan Peran Ini
-                                </small>
-                            </td>
-                            <td width="10%">
-                                <center>
-                                    <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalEditPegawai">
-                                        <i class="nav-icon fas fa-star"></i>
-                                    </a>
-
-                                    <form action="#" method="POST" class="d-inline delete-form">
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button type="button" class="btn btn-danger btn-sm delete-btn">
-                                            <i class="nav-icon fas fa-trash"></i>
-                                        </button>
-                                    </form>
-
-                                </center>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                            </td>
-                            <td width="1%">
-                                <center><i class="nav-icon fas fa-folder"></i></center>
-                            </td>
-                            <td>
-                                <a href="#">Satuan Pengawas Internal</a>
-                            </td>
-                            <td>
-                                <center>
-                                    <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalEditPegawai">
-                                        <i class="nav-icon fas fa-edit"></i>
-                                    </a>
-
-                                    <form action="#" method="POST" class="d-inline delete-form">
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button type="button" class="btn btn-danger btn-sm delete-btn">
-                                            <i class="nav-icon fas fa-trash"></i>
-                                        </button>
-                                    </form>
-
-                                </center>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                            </td>
-                            <td>
-                                <center><i class="nav-icon fas fa-folder"></i></center>
-                            </td>
-                            <td>
-                                <a href="#">Wakil Direktur Bidang Akademik</a>
-                            </td>
-                            <td>
-                                <center>
-                                    <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalEditPegawai">
-                                        <i class="nav-icon fas fa-edit"></i>
-                                    </a>
-
-                                    <form action="#" method="POST" class="d-inline delete-form">
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button type="button" class="btn btn-danger btn-sm delete-btn">
-                                            <i class="nav-icon fas fa-trash"></i>
-                                        </button>
-                                    </form>
-
-                                </center>
-                            </td>
-                        </tr>
+                    
+                        <!-- Ketua Utama -->
+                        @if ($ketuaUtama)
+                            <tr>
+                                <td></td>
+                                <td width="1%">
+                                    <center><i class="nav-icon fas fa-user"></i></center>
+                                </td>
+                                <td>
+                                    {{ $ketuaUtama->pegawai->nama_lengkap }} [Ketua] <br>
+                                    <small>
+                                        {{ $ketuaUtama->nip }} |
+                                        Direktur Politeknik Negeri Banyuwangi |
+                                        Sudah Buat SKP dengan Peran Ini
+                                    </small>
+                                </td>
+                                <td width="10%">
+                                    <center>
+                                        <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalEditPegawai">
+                                            <i class="nav-icon fas fa-star"></i>
+                                        </a>
+                                        <form action="#" method="POST" class="d-inline delete-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn btn-danger btn-sm delete-btn">
+                                                <i class="nav-icon fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </center>
+                                </td>
+                            </tr>
+                        @endif
+                    
+                        <!-- Tim-Tim Kerja Anak -->
+                        @foreach ($timKerja as $tim)
+                            <tr>
+                                <td></td>
+                                <td width="1%">
+                                    <center><i class="nav-icon fas fa-folder"></i></center>
+                                </td>
+                                <td>
+                                    <a href="#">{{ $tim->nama_unit }}</a>
+                                </td>
+                                <td>
+                                    <center>
+                                        <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalEditPegawai">
+                                            <i class="nav-icon fas fa-edit"></i>
+                                        </a>
+                                        <form action="#" method="POST" class="d-inline delete-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm delete-btn">
+                                                <i class="nav-icon fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </center>
+                                </td>
+                            </tr>
+                        @endforeach
                     </table>
+                    
                     <br>
                     <div class="d-flex">
                         {{-- {!! $pegawai->links('pagination::bootstrap-4') !!} --}}
@@ -163,89 +129,55 @@
             </div>
         </div>
     </div>
-    <!-- Modal Tambah Pegawai -->
-    {{-- <div class="modal fade" id="modalTambahPegawai" tabindex="-1" role="dialog"
-        aria-labelledby="modalTambahPegawaiLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <form action="{{ route('pegawai.store') }}" method="POST">
+    <!-- Modal Tambah Tim Kerja -->
+    <div class="modal fade" id="modalTambahTim" tabindex="-1" role="dialog"
+        aria-labelledby="modalTambahTimLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form action="{{ route('tim.store') }}" method="POST">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalTambahPegawaiLabel">Tambah Pegawai Baru</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <h5 class="modal-title">Tambah Tim Kerja</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <!-- Kolom 1 -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="nama_lengkap">Nama Lengkap</label>
-                                    <input type="text" name="nama_lengkap" class="form-control"
-                                        placeholder="Masukkan Nama Lengkap Pegawai" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="nip">NIP</label>
-                                    <input type="text" name="nip" class="form-control"
-                                        placeholder="Masukkan NIP Pegawai" required
-                                        oninput="this.value=this.value.replace(/[^0-9]/g,'');">
-                                </div>
-                                <div class="form-group">
-                                    <label for="nik">NIK</label>
-                                    <input type="text" name="nik" class="form-control"
-                                        placeholder="Masukkan NIK Pegawai" required
-                                        oninput="this.value=this.value.replace(/[^0-9]/g,'');">
-                                </div>
-                                <div class="form-group">
-                                    <label for="golongan_id">Golongan</label>
-                                    <select name="golongan_id" class="form-control" required>
-                                        <option value="">-- Pilih Golongan --</option>
-                                        @foreach ($golongan as $g)
-                                            <option value="{{ $g->id }}">{{ $g->nama_golongan }} -
-                                                {{ $g->deskripsi }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
 
-                            <!-- Kolom 2 -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" name="email" class="form-control"
-                                        placeholder="Masukkan Email Pegawai" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="no_hp">No HP</label>
-                                    <input type="text" name="no_hp" class="form-control"
-                                        placeholder="Masukkan No HP Pegawai" required
-                                        oninput="this.value=this.value.replace(/[^0-9]/g,'');">
-                                </div>
-                                <div class="form-group">
-                                    <label for="jabatan_id">Jabatan</label>
-                                    <select name="jabatan_id" class="form-control" required>
-                                        <option value="">-- Pilih Jabatan --</option>
-                                        @foreach ($jabatan as $j)
-                                            <option value="{{ $j->id }}">{{ $j->nama_jabatan }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="alamat">Alamat</label>
-                                    <textarea name="alamat" class="form-control" rows="3" placeholder="Masukkan Alamat Pegawai" required></textarea>
-                                </div>
-                            </div>
+                    <div class="modal-body">
+                        <!-- Parent Unit -->
+                        <div class="form-group">
+                            <label>Parent</label>
+                            <input type="text" class="form-control" value="Politeknik Negeri Banyuwangi" readonly>
+                            <input type="hidden" name="parent_id" value="{{ $parent_id ?? 1 }}">
+                        </div>
+
+                        <!-- Nama Tim -->
+                        <div class="form-group">
+                            <label>Nama Tim Kerja</label>
+                            <input type="text" name="nama_unit" class="form-control" required>
+                        </div>
+
+                        <!-- Ketua Tim -->
+                        <div class="form-group">
+                            <label>Ketua Tim</label>
+                            <select name="ketua_id" class="form-control" required>
+                                <option value="">- Pilih Ketua -</option>
+                                @foreach ($pejabat as $p)
+                                    <option value="{{ $p->id }}">{{ $p->pegawai->nama_lengkap }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
+
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
                     </div>
                 </div>
             </form>
         </div>
-    </div> --}}
+    </div>
+
 @stop
 @section('adminlte_js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

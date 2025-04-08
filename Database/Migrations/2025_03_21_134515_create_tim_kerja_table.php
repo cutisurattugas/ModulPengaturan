@@ -15,13 +15,13 @@ class CreateTimKerjaTable extends Migration
     {
         Schema::create('tim_kerja', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('unit_id');
-            $table->unsignedBigInteger('pejabat_id');
-            $table->unsignedBigInteger('pegawai_id');
-            $table->foreign('pegawai_id')->references('id')->on('pegawai')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('pejabat_id')->references('id')->on('pejabat')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('nama_unit');
+            $table->unsignedBigInteger('parent_id')->nullable(); // untuk relasi hirarki antar unit
+            $table->unsignedBigInteger('ketua_id')->nullable(); // relasi ke pejabat
             $table->timestamps();
+
+            $table->foreign('parent_id')->references('id')->on('tim_kerja')->onDelete('cascade');
+            $table->foreign('ketua_id')->references('id')->on('pejabat')->onDelete('set null');
         });
     }
 

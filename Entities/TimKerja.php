@@ -11,20 +11,30 @@ class TimKerja extends Model
 
     protected $table = 'tim_kerja';
     protected $primaryKey = 'id';
-    protected $fillable = ['unit_id', 'pejabat_id', 'pegawai_id'];
+    protected $fillable = ['nama_unit', 'parent_id', 'ketua_id'];
 
-    public function unit()
+    public function parent()
     {
-        return $this->belongsTo(Unit::class, 'unit_id', 'id');
+        return $this->belongsTo(TimKerja::class, 'parent_id');
     }
 
-    public function pejabat()
+    public function children()
     {
-        return $this->belongsTo(Pejabat::class, 'pejabat_id', 'id');
+        return $this->hasMany(TimKerja::class, 'parent_id');
     }
 
-    public function pegawai()
+    public function ketua()
     {
-        return $this->belongsTo(Pegawai::class, 'pegawai_id', 'id');
+        return $this->belongsTo(Pejabat::class, 'ketua_id');
+    }
+
+    public function anggota()
+    {
+        return $this->belongsToMany(Pegawai::class, 'tim_kerja_anggota', 'tim_kerja_id', 'pegawai_id');
+    }
+
+    public function childrenRecursive()
+    {
+        return $this->children()->with('ketua', 'childrenRecursive');
     }
 }
