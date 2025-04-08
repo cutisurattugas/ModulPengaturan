@@ -52,5 +52,6 @@ Route::prefix('pengaturan')->group(function() {
     // Tim Kerja
     Route::prefix('tim-kerja')->group(function() {
         Route::get('/', 'TimKerjaController@index')->name('tim.index');
+        Route::post('/store', 'TimKerjaController@store')->name('tim.store');
     });
 });

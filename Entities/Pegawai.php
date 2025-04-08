@@ -18,15 +18,23 @@ class Pegawai extends Model
         return $this->hasMany(TimKerja::class, 'pegawai_id', 'id');
     }
 
-    public function golongan(){
+    public function golongan()
+    {
         return $this->belongsTo(Golongan::class, 'golongan_id', 'id');
     }
 
-    public function jabatan_struktural(){
+    public function jabatan_struktural()
+    {
         return $this->belongsTo(Jabatan::class, 'jabatan_struktural_id', 'id');
     }
 
-    public function jabatan_fungsional(){
+    public function jabatan_fungsional()
+    {
         return $this->belongsTo(Jabatan::class, 'jabatan_fungsional_id', 'id');
+    }
+
+    public function timKerjaAnggota()
+    {
+        return $this->belongsToMany(TimKerja::class, 'tim_kerja_anggota', 'pegawai_id', 'tim_kerja_id');
     }
 }

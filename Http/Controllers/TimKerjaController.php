@@ -5,6 +5,9 @@ namespace Modules\Pengaturan\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Pengaturan\Entities\Pegawai;
+use Modules\Pengaturan\Entities\Pejabat;
+use Modules\Pengaturan\Entities\TimKerja;
 use Modules\Pengaturan\Entities\Unit;
 
 class TimKerjaController extends Controller
@@ -15,8 +18,14 @@ class TimKerjaController extends Controller
      */
     public function index()
     {
-        $unit = Unit::all();
-        return view('pengaturan::tim.index', compact('unit'));
+        $timKerja = TimKerja::with('ketua')
+            ->where('parent_id', 1) // anak dari politeknik
+            ->get();
+        $ketuaUtama = Pejabat::find(1);
+        $pejabat = Pejabat::all();
+        $parent_id = 1; // id Politeknik Negeri Banyuwangi atau root tim
+
+        return view('pengaturan::tim.index', compact('timKerja', 'pejabat', 'parent_id', 'ketuaUtama'));
     }
 
     /**
@@ -35,7 +44,19 @@ class TimKerjaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_unit' => 'required|string|max:255',
+            'ketua_id' => 'required|exists:pegawai,id',
+            'parent_id' => 'nullable|exists:tim_kerja,id'
+        ]);
+
+        $tim = TimKerja::create([
+            'nama_unit' => $request->nama_unit,
+            'parent_id' => $request->parent_id,
+            'ketua_id' => $request->ketua_id
+        ]);
+
+        return redirect()->back()->with('success', 'Tim berhasil ditambahkan.');
     }
 
     /**
