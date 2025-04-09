@@ -66,7 +66,16 @@ class TimKerjaController extends Controller
      */
     public function show($id)
     {
-        return view('pengaturan::show');
+        $timKerja = TimKerja::with('ketua')
+            ->where('parent_id', $id)
+            ->get();
+
+        $unitInduk = TimKerja::with('ketua')->findOrFail($id); // Unit yang sedang dibuka
+        $ketuaUtama = $unitInduk->ketua; // Bisa null
+        $pejabat = Pejabat::all();
+        $parent_id = $id;
+
+        return view('pengaturan::tim.index', compact('timKerja', 'pejabat', 'parent_id', 'ketuaUtama', 'unitInduk'));
     }
 
     /**

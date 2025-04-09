@@ -44,7 +44,8 @@
                         <!-- Root Tim Kerja -->
                         <tr>
                             <th width="1%"><i class="nav-icon fas fa-folder-open"></i></th>
-                            <th colspan="2">Politeknik Negeri Banyuwangi</th>
+                            <th colspan="2">{{ $unitInduk->nama_unit ?? 'Politeknik Negeri Banyuwangi' }}</th>
+
                             <th>
                                 <center>
                                     <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalEditPegawai">
@@ -71,8 +72,8 @@
                                 <td>
                                     {{ $ketuaUtama->pegawai->nama_lengkap }} [Ketua] <br>
                                     <small>
-                                        {{ $ketuaUtama->nip }} |
-                                        Direktur Politeknik Negeri Banyuwangi |
+                                        {{ $ketuaUtama->pegawai->nip }} |
+                                        {{$ketuaUtama->jabatan->nama_jabatan}} |
                                         Sudah Buat SKP dengan Peran Ini
                                     </small>
                                 </td>
@@ -101,7 +102,8 @@
                                     <center><i class="nav-icon fas fa-folder"></i></center>
                                 </td>
                                 <td>
-                                    <a href="#">{{ $tim->nama_unit }}</a>
+                                    <a href="{{ route('tim.show', $tim->id) }}">{{ $tim->nama_unit }}</a>
+
                                 </td>
                                 <td>
                                     <center>
@@ -147,7 +149,7 @@
                         <!-- Parent Unit -->
                         <div class="form-group">
                             <label>Parent</label>
-                            <input type="text" class="form-control" value="Politeknik Negeri Banyuwangi" readonly>
+                            <input type="text" class="form-control" value="{{ $unitInduk->nama_unit ?? 'Politeknik Negeri Banyuwangi' }}" readonly>
                             <input type="hidden" name="parent_id" value="{{ $parent_id ?? 1 }}">
                         </div>
 
