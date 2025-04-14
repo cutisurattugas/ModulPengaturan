@@ -44,7 +44,7 @@
                         <!-- Root Tim Kerja -->
                         <tr>
                             <th width="1%"><i class="nav-icon fas fa-folder-open"></i></th>
-                            <th colspan="2">{{ $unitInduk->nama_unit ?? 'Politeknik Negeri Banyuwangi' }}</th>
+                            <th colspan="2">{{ $unitInduk->unit->nama ?? 'Politeknik Negeri Banyuwangi' }}</th>
 
                             <th>
                                 <center>
@@ -61,7 +61,7 @@
                                 </center>
                             </th>
                         </tr>
-                    
+
                         <!-- Ketua Utama -->
                         @if ($ketuaUtama)
                             <tr>
@@ -73,7 +73,7 @@
                                     {{ $ketuaUtama->pegawai->nama_lengkap }} [Ketua] <br>
                                     <small>
                                         {{ $ketuaUtama->pegawai->nip }} |
-                                        {{$ketuaUtama->jabatan->nama_jabatan}} |
+                                        {{ $ketuaUtama->jabatan->nama_jabatan }} |
                                         Sudah Buat SKP dengan Peran Ini
                                     </small>
                                 </td>
@@ -93,7 +93,7 @@
                                 </td>
                             </tr>
                         @endif
-                    
+
                         <!-- Tim-Tim Kerja Anak -->
                         @foreach ($timKerja as $tim)
                             <tr>
@@ -102,12 +102,13 @@
                                     <center><i class="nav-icon fas fa-folder"></i></center>
                                 </td>
                                 <td>
-                                    <a href="{{ route('tim.show', $tim->id) }}">{{ $tim->nama_unit }}</a>
+                                    <a href="{{ route('tim.show', $tim->id) }}">{{ $tim->unit->nama }}</a>
 
                                 </td>
                                 <td>
                                     <center>
-                                        <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalEditPegawai">
+                                        <a class="btn btn-warning btn-sm" data-toggle="modal"
+                                            data-target="#modalEditPegawai">
                                             <i class="nav-icon fas fa-edit"></i>
                                         </a>
                                         <form action="#" method="POST" class="d-inline delete-form">
@@ -122,7 +123,7 @@
                             </tr>
                         @endforeach
                     </table>
-                    
+
                     <br>
                     <div class="d-flex">
                         {{-- {!! $pegawai->links('pagination::bootstrap-4') !!} --}}
@@ -132,8 +133,8 @@
         </div>
     </div>
     <!-- Modal Tambah Tim Kerja -->
-    <div class="modal fade" id="modalTambahTim" tabindex="-1" role="dialog"
-        aria-labelledby="modalTambahTimLabel" aria-hidden="true">
+    <div class="modal fade" id="modalTambahTim" tabindex="-1" role="dialog" aria-labelledby="modalTambahTimLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <form action="{{ route('tim.store') }}" method="POST">
                 @csrf
@@ -149,14 +150,20 @@
                         <!-- Parent Unit -->
                         <div class="form-group">
                             <label>Parent</label>
-                            <input type="text" class="form-control" value="{{ $unitInduk->nama_unit ?? 'Politeknik Negeri Banyuwangi' }}" readonly>
+                            <input type="text" class="form-control"
+                                value="{{ $unitInduk->nama_unit ?? 'Politeknik Negeri Banyuwangi' }}" readonly>
                             <input type="hidden" name="parent_id" value="{{ $parent_id ?? 1 }}">
                         </div>
 
                         <!-- Nama Tim -->
                         <div class="form-group">
-                            <label>Nama Tim Kerja</label>
-                            <input type="text" name="nama_unit" class="form-control" required>
+                            <label>Nama Tim</label>
+                            <select class="form-control" name="unit_id">
+                                <option value="">- Pilih Unit -</option>
+                                @foreach ($units as $unit)
+                                    <option value="{{ $unit->id }}">{{ $unit->nama }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <!-- Ketua Tim -->
@@ -172,8 +179,8 @@
                     </div>
 
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                         <button type="submit" class="btn btn-primary">Simpan</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
                     </div>
                 </div>
             </form>

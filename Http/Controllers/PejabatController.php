@@ -48,7 +48,6 @@ class PejabatController extends Controller
             'periode_mulai' => 'required|date',
             'periode_selesai' => 'nullable|date|after_or_equal:periode_mulai',
             'status' => 'required|boolean',
-            'unit_id' => 'required|exists:units,id',
             'jabatan_id' => 'required|exists:jabatan,id',
             'sk' => 'required|file|mimes:pdf|max:2048',
         ]);
