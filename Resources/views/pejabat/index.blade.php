@@ -54,7 +54,9 @@
                                     {{ $item->pegawai->nama_lengkap }}
                                 </td>
                                 <td>
-                                    {{ $item->unit->nama }}
+                                    @if ($item->unit == NULL)
+                                        <p>-</p>
+                                    @endif
                                 </td>
                                 <td>
                                     {{ $item->jabatan->nama_jabatan }}
@@ -286,7 +288,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="unit_id">Unit</label>
-                                    <select name="unit_id" class="form-control" required>
+                                    <select name="unit_id" class="form-control">
                                         <option value="" disabled selected>Pilih Unit</option>
                                         @foreach ($unit as $u)
                                             <option value="{{ $u->id }}">{{ $u->nama }}</option>

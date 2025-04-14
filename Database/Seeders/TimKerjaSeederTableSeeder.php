@@ -18,7 +18,7 @@ class TimKerjaSeederTableSeeder extends Seeder
         TimKerja::firstOrCreate(
             ['id' => 1],
             [
-                'nama_unit' => 'Politeknik Negeri Banyuwangi',
+                'unit_id' => null,
                 'ketua_id' => 1, // pastikan ini valid
                 'parent_id' => null
             ]

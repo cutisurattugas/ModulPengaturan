@@ -15,6 +15,6 @@ class Unit extends Model
 
     public function timKerja()
     {
-        return $this->hasMany(TimKerja::class, 'unit_id', 'id');
+        return $this->hasMany(TimKerja::class);
     }
 }

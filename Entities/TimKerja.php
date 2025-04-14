@@ -11,7 +11,7 @@ class TimKerja extends Model
 
     protected $table = 'tim_kerja';
     protected $primaryKey = 'id';
-    protected $fillable = ['nama_unit', 'parent_id', 'ketua_id'];
+    protected $fillable = ['unit_id', 'parent_id', 'ketua_id'];
 
     public function parent()
     {
@@ -36,5 +36,10 @@ class TimKerja extends Model
     public function childrenRecursive()
     {
         return $this->children()->with('ketua', 'childrenRecursive');
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
 }

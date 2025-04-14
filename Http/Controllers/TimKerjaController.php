@@ -18,14 +18,15 @@ class TimKerjaController extends Controller
      */
     public function index()
     {
-        $timKerja = TimKerja::with('ketua')
+        $timKerja = TimKerja::with('ketua', 'unit')
             ->where('parent_id', 1) // anak dari politeknik
             ->get();
         $ketuaUtama = Pejabat::find(1);
         $pejabat = Pejabat::all();
         $parent_id = 1; // id Politeknik Negeri Banyuwangi atau root tim
+        $units = Unit::all();
 
-        return view('pengaturan::tim.index', compact('timKerja', 'pejabat', 'parent_id', 'ketuaUtama'));
+        return view('pengaturan::tim.index', compact('timKerja', 'pejabat', 'parent_id', 'ketuaUtama', 'units'));
     }
 
     /**
@@ -45,13 +46,12 @@ class TimKerjaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_unit' => 'required|string|max:255',
+            'unit_id' => 'required|exists:units,id',
             'ketua_id' => 'required|exists:pegawai,id',
-            'parent_id' => 'nullable|exists:tim_kerja,id'
+            'parent_id' => 'required|exists:tim_kerja,id'
         ]);
-
         $tim = TimKerja::create([
-            'nama_unit' => $request->nama_unit,
+            'unit_id' => $request->unit_id,
             'parent_id' => $request->parent_id,
             'ketua_id' => $request->ketua_id
         ]);
@@ -74,8 +74,9 @@ class TimKerjaController extends Controller
         $ketuaUtama = $unitInduk->ketua; // Bisa null
         $pejabat = Pejabat::all();
         $parent_id = $id;
+        $units = Unit::all();
 
-        return view('pengaturan::tim.index', compact('timKerja', 'pejabat', 'parent_id', 'ketuaUtama', 'unitInduk'));
+        return view('pengaturan::tim.index', compact('timKerja', 'pejabat', 'parent_id', 'ketuaUtama', 'unitInduk', 'units'));
     }
 
     /**

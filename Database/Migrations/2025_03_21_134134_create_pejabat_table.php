@@ -20,7 +20,7 @@ class CreatePejabatTable extends Migration
             $table->boolean('status');
             $table->string('sk');
             $table->unsignedBigInteger('pegawai_id');
-            $table->unsignedBigInteger('unit_id');
+            $table->unsignedBigInteger('unit_id')->nullable();
             $table->unsignedBigInteger('jabatan_id');
             $table->foreign('jabatan_id')->references('id')->on('jabatan')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade')->onUpdate('cascade');
