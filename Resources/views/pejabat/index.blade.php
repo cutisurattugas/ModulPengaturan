@@ -56,6 +56,8 @@
                                 <td>
                                     @if ($item->unit == NULL)
                                         <p>-</p>
+                                    @elseif($item->unit != NULL)
+                                        {{$item->unit->nama}}
                                     @endif
                                 </td>
                                 <td>

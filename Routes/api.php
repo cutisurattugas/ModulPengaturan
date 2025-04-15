@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,6 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/pengaturan', function (Request $request) {
     return $request->user();
 });
+
+// Route untuk ambil data anak tim kerja via API
+Route::get('/tim-kerja/{id}/children', 'TimKerjaController@getChildren')->name('api.timkerja.children');
