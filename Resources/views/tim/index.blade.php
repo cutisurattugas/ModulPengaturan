@@ -102,8 +102,11 @@
                                     <center><i class="nav-icon fas fa-folder"></i></center>
                                 </td>
                                 <td>
-                                    <a href="{{ route('tim.show', $tim->id) }}">{{ $tim->unit->nama }}</a>
-
+                                    <a href="javascript:void(0);" class="toggle-child" data-id="{{ $tim->id }}">
+                                        {{ $tim->unit->nama }}
+                                    </a>
+                                    <div class="child-detail mt-2" id="child-{{ $tim->id }}" style="display: none;">
+                                    </div>
                                 </td>
                                 <td>
                                     <center>
@@ -148,11 +151,16 @@
 
                     <div class="modal-body">
                         <!-- Parent Unit -->
-                        <div class="form-group">
-                            <label>Parent</label>
-                            <input type="text" class="form-control"
-                                value="{{ $unitInduk->nama_unit ?? 'Politeknik Negeri Banyuwangi' }}" readonly>
-                            <input type="hidden" name="parent_id" value="{{ $parent_id ?? 1 }}">
+                        <div class="mb-3">
+                            <label for="parent_id" class="form-label">Parent</label>
+                            <select class="form-control" name="parent_id" id="parent_id" class="form-select">
+                                <option value="">-- Pilih Parent --</option>
+                                <!-- Opsional kalau root tetap ditampilkan -->
+                                @foreach ($allTimKerja as $tim)
+                                    <option value="{{ $tim->id }}">
+                                        {{ $tim->unit->nama ?? 'Politeknik Negeri Banyuwangi' }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <!-- Nama Tim -->
@@ -189,6 +197,50 @@
 
 @stop
 @section('adminlte_js')
+
+   <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.body.addEventListener('click', function (e) {
+            // Mengecek apakah elemen yang diklik adalah link yang memiliki class 'toggle-child'
+            if (e.target.classList.contains('toggle-child')) {
+                const id = e.target.dataset.id;  // Mengambil id dari data-id
+                const containerId = 'child-container-' + id; // Id kontainer tempat child akan dimuat
+                let container = document.getElementById(containerId);
+
+                // Kalau belum ada, kita buat kontainernya
+                if (!container) {
+                    container = document.createElement('div');
+                    container.id = containerId;
+                    container.classList.add('ms-3', 'mt-2');
+                    e.target.insertAdjacentElement('afterend', container);
+                }
+
+                // Toggle jika sudah dimuat
+                if (container.dataset.loaded === "true") {
+                    container.style.display = (container.style.display === 'none' || container.style.display === '') ? 'block' : 'none';
+                    return;
+                }
+
+                // Loading state
+                container.innerHTML = '<em>Memuat...</em>';
+
+                // Fetch data anak
+                fetch(`/api/tim-kerja/${id}/children`)
+                    .then(res => res.json())
+                    .then(data => {
+                        container.innerHTML = data.html;
+                        container.style.display = 'block';
+                        container.dataset.loaded = "true";
+                    })
+                    .catch(err => {
+                        container.innerHTML = '<span class="text-danger">Gagal memuat data anak.</span>';
+                    });
+            }
+        });
+    });
+</script>
+
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>

@@ -25,8 +25,9 @@ class TimKerjaController extends Controller
         $pejabat = Pejabat::all();
         $parent_id = 1; // id Politeknik Negeri Banyuwangi atau root tim
         $units = Unit::all();
+        $allTimKerja = TimKerja::with('unit')->get();
 
-        return view('pengaturan::tim.index', compact('timKerja', 'pejabat', 'parent_id', 'ketuaUtama', 'units'));
+        return view('pengaturan::tim.index', compact('timKerja', 'pejabat', 'parent_id', 'ketuaUtama', 'units', 'allTimKerja'));
     }
 
     /**
@@ -78,6 +79,58 @@ class TimKerjaController extends Controller
 
         return view('pengaturan::tim.index', compact('timKerja', 'pejabat', 'parent_id', 'ketuaUtama', 'unitInduk', 'units'));
     }
+
+    public function getChildren($id)
+{
+    // Ambil data tim kerja anak dengan relasi yang diperlukan
+    $children = TimKerja::with(['unit', 'ketua.pegawai', 'ketua.jabatan'])
+        ->where('parent_id', $id)
+        ->get();
+
+    // Ambil juga data unit induk (parent)
+    $unitInduk = TimKerja::with(['ketua.pegawai', 'ketua.jabatan'])->find($id);
+
+    // Buat HTML untuk menampilkan ketua induk (parent unit)
+    $html = '';
+
+    // Menampilkan unit induk (parent) dan ketua-nya
+    if ($unitInduk) {
+        $html .= '<div class="border rounded p-2 mb-3">';
+        $html .= '<strong>' . $unitInduk->unit->nama . '</strong><br>';
+        if ($unitInduk->ketua) {
+            $html .= '<small>' . $unitInduk->ketua->pegawai->nama_lengkap . ' [Ketua] - ';
+            $html .= $unitInduk->ketua->pegawai->nip . ' | ' . ($unitInduk->ketua->jabatan->nama_jabatan ?? '-') . '</small>';
+        } else {
+            $html .= '<small><em>Belum ada ketua</em></small>';
+        }
+        $html .= '</div>';
+    }
+
+    // Menampilkan tim kerja anak-anak
+    foreach ($children as $child) {
+        $html .= '<div class="border rounded p-2 mb-1">';
+        $html .= '<a href="javascript:void(0)" class="child-link" data-id="' . $child->id . '">';
+        $html .= '<strong>' . $child->unit->nama . '</strong>';
+        $html .= '</a><br>';
+    
+        if ($child->ketua) {
+            $html .= '<small>' . $child->ketua->pegawai->nama_lengkap . ' [Ketua] - ';
+            $html .= $child->ketua->pegawai->nip . ' | ' . ($child->ketua->jabatan->nama_jabatan ?? '-') . '</small>';
+        } else {
+            $html .= '<small><em>Belum ada ketua</em></small>';
+        }
+    
+        $html .= '<div class="children-container mt-2" id="child-container-' . $child->id . '"></div>';
+        $html .= '</div>';
+    }    
+
+    return response()->json([
+        'status' => 'ok',
+        'html' => $html,  // Mengirimkan HTML yang telah dirender
+    ]);
+}
+
+
 
     /**
      * Show the form for editing the specified resource.
