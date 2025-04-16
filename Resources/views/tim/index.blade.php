@@ -18,11 +18,6 @@
                         <a href="#" class="btn btn-primary btn-sm mb-2" data-toggle="modal"
                             data-target="#modalTambahTim">
                             <i class="nav-icon fas fa-user-plus"></i>
-                            Tambah Ketua
-                        </a>
-                        <a href="#" class="btn btn-primary btn-sm mb-2" data-toggle="modal"
-                            data-target="#modalTambahTim">
-                            <i class="nav-icon fas fa-user-plus"></i>
                             Tambah Anggota
                         </a>
                         <a href="#" class="btn btn-info btn-sm mb-2" data-toggle="modal"
@@ -198,47 +193,99 @@
 @stop
 @section('adminlte_js')
 
-   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.body.addEventListener('click', function (e) {
-            // Mengecek apakah elemen yang diklik adalah link yang memiliki class 'toggle-child'
-            if (e.target.classList.contains('toggle-child')) {
-                const id = e.target.dataset.id;  // Mengambil id dari data-id
-                const containerId = 'child-container-' + id; // Id kontainer tempat child akan dimuat
-                let container = document.getElementById(containerId);
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.body.addEventListener('click', function(e) {
+                // Mengecek apakah elemen yang diklik adalah link dengan class 'toggle-child'
+                if (e.target.classList.contains('toggle-child')) {
+                    const id = e.target.dataset.id; // Mengambil ID dari data-id
+                    const containerId = 'child-container-' + id; // ID kontainer tempat child akan dimuat
+                    let container = document.getElementById(containerId);
 
-                // Kalau belum ada, kita buat kontainernya
-                if (!container) {
-                    container = document.createElement('div');
-                    container.id = containerId;
-                    container.classList.add('ms-3', 'mt-2');
-                    e.target.insertAdjacentElement('afterend', container);
+                    // Kalau belum ada, buat kontainernya
+                    if (!container) {
+                        container = document.createElement('div');
+                        container.id = containerId;
+                        container.classList.add('ms-3', 'mt-2');
+                        e.target.insertAdjacentElement('afterend', container);
+                    }
+
+                    // Toggle jika sudah dimuat
+                    if (container.dataset.loaded === "true") {
+                        container.style.display = (container.style.display === 'none' || container.style
+                            .display === '') ? 'block' : 'none';
+                        return;
+                    }
+
+                    // Loading state
+                    container.innerHTML = `
+                        <div class="d-flex align-items-center">
+                            <div class="spinner-border text-primary me-2" role="status"></div>
+                            <span>Memuat data...</span>
+                        </div>
+                    `;
+
+                    // Fetch data anak dari API
+                    fetch(`/api/tim-kerja/${id}/children`)
+                        .then(res => res.json())
+                        .then(data => {
+                            container.innerHTML = data.html;
+                            container.style.display = 'block';
+                            container.dataset.loaded = "true"; // Tandai kontainer sudah dimuat
+
+                            // Pasang event listener pada elemen baru yang dimuat
+                            attachToggleChildEventListeners();
+                        })
+                        .catch(err => {
+                            container.innerHTML =
+                                '<span class="text-danger">Gagal memuat data anak.</span>';
+                        });
                 }
-
-                // Toggle jika sudah dimuat
-                if (container.dataset.loaded === "true") {
-                    container.style.display = (container.style.display === 'none' || container.style.display === '') ? 'block' : 'none';
-                    return;
-                }
-
-                // Loading state
-                container.innerHTML = '<em>Memuat...</em>';
-
-                // Fetch data anak
-                fetch(`/api/tim-kerja/${id}/children`)
-                    .then(res => res.json())
-                    .then(data => {
-                        container.innerHTML = data.html;
-                        container.style.display = 'block';
-                        container.dataset.loaded = "true";
-                    })
-                    .catch(err => {
-                        container.innerHTML = '<span class="text-danger">Gagal memuat data anak.</span>';
-                    });
-            }
+            });
         });
-    });
-</script>
+
+        // Fungsi untuk menambahkan event listener pada elemen baru
+        function attachToggleChildEventListeners() {
+            // Memastikan event listener terpasang pada semua link dengan class 'toggle-child'
+            document.querySelectorAll('.toggle-child').forEach(link => {
+                link.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    const container = document.getElementById('child-container-' + id);
+
+                    if (container.style.display === 'block') {
+                        container.style.display = 'none';
+                        return;
+                    }
+
+                    if (container.dataset.loaded === "true") {
+                        container.style.display = 'block';
+                        return;
+                    }
+
+                    container.innerHTML = `
+                        <div class="d-flex align-items-center">
+                            <div class="spinner-border text-primary me-2" role="status"></div>
+                            <span>Memuat data...</span>
+                        </div>
+                    `;
+
+                    fetch(`/api/tim-kerja/${id}/children`)
+                        .then(res => res.json())
+                        .then(data => {
+                            container.innerHTML = data.html;
+                            container.style.display = 'block';
+                            container.dataset.loaded = "true";
+
+                            // Tunggu sebentar sebelum manipulasi lebih lanjut (opsional)
+                            setTimeout(() => {
+                                attachToggleChildEventListeners();
+                            }, 10);
+                        })
+                });
+            });
+        }
+    </script>
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
