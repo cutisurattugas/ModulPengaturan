@@ -100,7 +100,7 @@
                                     <a href="javascript:void(0);" class="toggle-child" data-id="{{ $tim->id }}">
                                         {{ $tim->unit->nama }}
                                     </a>
-                                    <div class="child-detail mt-2" id="child-{{ $tim->id }}" style="display: none;">
+                                    <div class="child-detail mt-2" id="child-{{ $tim->id }}" >
                                     </div>
                                 </td>
                                 <td>

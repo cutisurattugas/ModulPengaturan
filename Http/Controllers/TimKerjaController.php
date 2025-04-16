@@ -81,54 +81,66 @@ class TimKerjaController extends Controller
     }
 
     public function getChildren($id)
-{
-    // Ambil data tim kerja anak dengan relasi yang diperlukan
-    $children = TimKerja::with(['unit', 'ketua.pegawai', 'ketua.jabatan'])
-        ->where('parent_id', $id)
-        ->get();
+    {
+        $children = TimKerja::with(['unit', 'ketua.pegawai', 'ketua.jabatan'])->where('parent_id', $id)->get();
+        $unitInduk = TimKerja::with(['ketua.pegawai', 'ketua.jabatan'])->find($id);
 
-    // Ambil juga data unit induk (parent)
-    $unitInduk = TimKerja::with(['ketua.pegawai', 'ketua.jabatan'])->find($id);
-
-    // Buat HTML untuk menampilkan ketua induk (parent unit)
-    $html = '';
-
-    // Menampilkan unit induk (parent) dan ketua-nya
-    if ($unitInduk) {
-        $html .= '<div class="border rounded p-2 mb-3">';
-        $html .= '<strong>' . $unitInduk->unit->nama . '</strong><br>';
-        if ($unitInduk->ketua) {
-            $html .= '<small>' . $unitInduk->ketua->pegawai->nama_lengkap . ' [Ketua] - ';
-            $html .= $unitInduk->ketua->pegawai->nip . ' | ' . ($unitInduk->ketua->jabatan->nama_jabatan ?? '-') . '</small>';
-        } else {
-            $html .= '<small><em>Belum ada ketua</em></small>';
+        $html = '';
+        if ($unitInduk) {
+            $html .= '<div class="border rounded p-2 mb-3">';
+            $html .= '<div class="d-flex justify-content-between align-items-start">';
+            $html .= '<div>';
+            if ($unitInduk->ketua) {
+                $html .= $unitInduk->ketua->pegawai->nama_lengkap . ' [Ketua] <br>';
+                $html .= '<small>' . $unitInduk->ketua->pegawai->nip . ' | ' . ($unitInduk->ketua->jabatan->nama_jabatan ?? '-') . ' | Sudah Buat SKP dengan Peran Ini</small>';
+            } else {
+                $html .= '<em>Belum ada ketua</em>';
+            }
+            $html .= '</div>';
+            $html .= '<div>';
+            $html .= '<a class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalEditPegawai"> <i class="fas fa-star"></i></a>';
+            $html .= '<form action="#" method="POST" class="d-inline delete-form" onsubmit="return confirm(\'Yakin ingin menghapus?\')">' . csrf_field() . method_field('DELETE') . '<button type="submit" class="btn btn-danger btn-sm delete-btn"><i class="fas fa-trash"></i></button></form>';
+            $html .= '</div>';
+            $html .= '</div>';
+            $html .= '</div>';
         }
-        $html .= '</div>';
+
+        // Menampilkan tim kerja anak-anak
+        foreach ($children as $child) {
+            $html .= '<div class="border rounded p-2 mb-1">';
+            $html .= '<div class="d-flex justify-content-between align-items-start">';
+
+            // KIRI: Nama Unit Anak
+            $html .= '<div>';
+            $html .= '<a href="javascript:void(0)" class="toggle-child" data-id="' . $child->id . '">';
+            $html .= '<strong>' . $child->unit->nama . '</strong>';
+            $html .= '</a>';
+            $html .= '</div>';
+
+            // KANAN: Tombol Aksi
+            $html .= '<div>';
+            $html .= '<a class="btn btn-warning btn-sm mr-1" data-toggle="modal" data-target="#modalEditPegawai">
+            <i class="fas fa-edit"></i>
+          </a>';
+            $html .= '<form action="#" method="POST" class="d-inline delete-form" onsubmit="return confirm(\'Yakin ingin menghapus?\')">
+            ' . csrf_field() . method_field('DELETE') . '
+            <button type="submit" class="btn btn-danger btn-sm delete-btn">
+                <i class="fas fa-trash"></i>
+            </button>
+          </form>';
+            $html .= '</div>';
+
+            $html .= '</div>'; // close d-flex
+            $html .= '<div class="children-container mt-2" id="child-container-' . $child->id . '"></div>';
+            $html .= '</div>'; // close border box
+
+        }
+
+        return response()->json([
+            'status' => 'ok',
+            'html' => $html,  // Mengirimkan HTML yang telah dirender
+        ]);
     }
-
-    // Menampilkan tim kerja anak-anak
-    foreach ($children as $child) {
-        $html .= '<div class="border rounded p-2 mb-1">';
-        $html .= '<a href="javascript:void(0)" class="toggle-child" data-id="' . $child->id . '">';
-        $html .= '<strong>' . $child->unit->nama . '</strong>';
-        $html .= '</a><br>';
-    
-        if ($child->ketua) {
-            $html .= '<small>' . $child->ketua->pegawai->nama_lengkap . ' [Ketua] - ';
-            $html .= $child->ketua->pegawai->nip . ' | ' . ($child->ketua->jabatan->nama_jabatan ?? '-') . '</small>';
-        } else {
-            $html .= '<small><em>Belum ada ketua</em></small>';
-        }
-    
-        $html .= '<div class="children-container mt-2" id="child-container-' . $child->id . '"></div>';
-        $html .= '</div>';
-    }    
-
-    return response()->json([
-        'status' => 'ok',
-        'html' => $html,  // Mengirimkan HTML yang telah dirender
-    ]);
-}
 
 
 
