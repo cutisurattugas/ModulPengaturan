@@ -109,7 +109,7 @@ class TimKerjaController extends Controller
     // Menampilkan tim kerja anak-anak
     foreach ($children as $child) {
         $html .= '<div class="border rounded p-2 mb-1">';
-        $html .= '<a href="javascript:void(0)" class="child-link" data-id="' . $child->id . '">';
+        $html .= '<a href="javascript:void(0)" class="toggle-child" data-id="' . $child->id . '">';
         $html .= '<strong>' . $child->unit->nama . '</strong>';
         $html .= '</a><br>';
     
