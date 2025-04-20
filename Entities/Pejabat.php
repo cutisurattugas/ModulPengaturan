@@ -11,12 +11,7 @@ class Pejabat extends Model
 
     protected $table = 'pejabat';
     protected $primaryKey = 'id';
-    protected $fillable = ['periode_mulai', 'periode_selesai', 'status', 'sk', 'pegawai_id', 'unit_id', 'jabatan_id'];
-
-    public function pegawai()
-    {
-        return $this->belongsTo(Pegawai::class, 'pegawai_id', 'id');
-    }
+    protected $fillable = ['periode_mulai', 'periode_selesai', 'status', 'sk', 'pegawai', 'unit_id', 'jabatan_id'];
 
     public function unit()
     {

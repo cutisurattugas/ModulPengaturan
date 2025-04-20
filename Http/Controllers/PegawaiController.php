@@ -19,7 +19,7 @@ class PegawaiController extends Controller
     public function index(Request $request)
     {
         try {
-            $token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNzdlNTg2NzdjMjExOGZlZmQ5M2JjOTQzMWE0NzEyYzJhZDE4MDIwNTkyY2IwYzU5YzlhMTQyYWVmNDU0YTMxNTY1M2U3M2NlNGZlNWFmZDkiLCJpYXQiOjE3NDE1ODg0OTQuOTgzNDE5LCJuYmYiOjE3NDE1ODg0OTQuOTgzNDI5LCJleHAiOjE3NzMxMjQ0OTQuODI0NTc0LCJzdWIiOiI5MTYiLCJzY29wZXMiOlsicmVhZG9ubHkiXX0.r5mIeRDLDbEr-jyORFuWt4pKpwtQ8guJHWkVcCB0XALpe4CLkX-HA_aA_kK1un0sybGxFAwDv86iqwVIQhII7d9sVv_b9_xJzqbPWu7LOGJ1lNiFueDpTrCc851DBuE8DCKmMHMX80kNc_jgTTLfpBBe0BR1FRyGi39dhwdhiTmxUxwpvwaD_rHbt6OKFRHohRTsHkP-A2SCVBkHRiTEYcCiaJBjyduL2LFvSgy9Lk4NRhiB_2Qmv-Mlg6juGEvDyqZUx5779_FWk2eT13xVDRklX3j9ErbA1dUg0p2eUcxnvjae3kPxN7HCcilK2nut1b3qXmGVu_OXcBrw7buJWM5q72oKjwsxQujIcDjUB4ar_SpLLZ8mFHq5zqgp9dH1Gyy5RZ2yBeXLGBzt2Hru3hnESdRalFAi2hlySJO-0fiqdE8mIvL4nl9AP6J_VZseqhP-gUV0VbeEiP3Tq5bj-9LHjcWkdpWaRMUyLXGzSL6iiOh_kyDlNrUIAZJuiMDt3ecIvowET9_t2huUJoJJkUhqPfGnllWmQmlOG5gjnGA8HzW4qXq-Bo2pM1zP7uBTZe4Qgv-JYiaVnCfv9KRksjz_Fy9cWTnqSJHFoyRmJOtfO93MnU7nuf2GyWNexafAY4xD9DmFVYKX8wB8rO7eB2S_2WRueQ3M6oojVzB829E';
+            $token = 'token-api';
 
             $page = $request->query('page', 1);
 
