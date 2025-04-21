@@ -16,7 +16,7 @@
                         Tambah Tim Kerja
                     </a>
                     <a href="#" class="btn btn-primary btn-sm mb-2" data-toggle="modal"
-                        data-target="#modalTambahTim">
+                        data-target="#modalTambahAnggota">
                         <i class="nav-icon fas fa-user-plus"></i>
                         Tambah Anggota
                     </a>
@@ -194,7 +194,8 @@
         </form>
     </div>
 </div>
-
+{{-- Modal Tambah Anggota --}}
+@include('pengaturan::tim.components.modal-anggota')
 @stop
 @section('adminlte_js')
 
