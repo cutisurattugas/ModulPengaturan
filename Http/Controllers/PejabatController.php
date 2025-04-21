@@ -5,6 +5,7 @@ namespace Modules\Pengaturan\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Modules\Pengaturan\Entities\Jabatan;
 use Modules\Pengaturan\Entities\Pegawai;
@@ -17,14 +18,34 @@ class PejabatController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
+        // Ambil data unit dan jabatan dari database
         $unit = Unit::all();
         $jabatan = Jabatan::where('tipe_jabatan', 'Struktural')->get();
-        $pegawai = Pegawai::all();
+
+        // Ambil data pejabat dari database
         $pejabat = Pejabat::paginate(10);
+
+        // Ambil data pegawai dari API dengan pagination
+        $page = $request->query('page', 1);
+        $token = 'token-api';
+
+        // Mengambil data pegawai dari API secara bertahap menggunakan pagination
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->get("https://sit.poliwangi.ac.id/v2/api/v1/sitapi/pegawai?page[number]=$page");
+
+        if ($response->successful()) {
+            $result = $response->json();
+            $pegawai = collect($result['data']);
+        } else {
+            $pegawai = collect();
+        }
+
         return view('pengaturan::pejabat.index', compact('pejabat', 'pegawai', 'jabatan', 'unit'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -44,7 +65,7 @@ class PejabatController extends Controller
     {
         // dd($request);
         $request->validate([
-            'pegawai_id' => 'required|exists:pegawai,id',
+            'pegawai' => 'required',
             'periode_mulai' => 'required|date',
             'periode_selesai' => 'nullable|date|after_or_equal:periode_mulai',
             'status' => 'required|boolean',
@@ -61,7 +82,7 @@ class PejabatController extends Controller
         }
 
         Pejabat::create([
-            'pegawai_id' => $request->pegawai_id,
+            'pegawai' => $request->pegawai,
             'periode_mulai' => $request->periode_mulai,
             'periode_selesai' => $request->periode_selesai,
             'status' => $request->status,
@@ -137,7 +158,7 @@ class PejabatController extends Controller
 
         return redirect()->back()->with('success', 'Data Pejabat berhasil diperbarui.');
     }
-    
+
     /**
      * Remove the specified resource from storage.
      * @param int $id

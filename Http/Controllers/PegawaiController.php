@@ -5,6 +5,7 @@ namespace Modules\Pengaturan\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Http;
 use Modules\Pengaturan\Entities\Golongan;
 use Modules\Pengaturan\Entities\Jabatan;
 use Modules\Pengaturan\Entities\Pegawai;
@@ -15,13 +16,32 @@ class PegawaiController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        $golongan = Golongan::all();
-        $jabatan_fungsional = Jabatan::where('tipe_jabatan', 'Fungsional')->get();
-        $jabatan_struktural = Jabatan::where('tipe_jabatan', 'Struktural')->get();
-        $pegawai = Pegawai::paginate(10);
-        return view('pengaturan::pegawai.index', compact('pegawai', 'jabatan_fungsional', 'jabatan_struktural', 'golongan'));
+        try {
+            $token = 'token-api';
+
+            $page = $request->query('page', 1);
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $token,
+            ])->get("https://sit.poliwangi.ac.id/v2/api/v1/sitapi/pegawai?page%5Bnumber%5D=$page");
+
+            if ($response->successful()) {
+                $result = $response->json();
+
+                return view('pengaturan::pegawai.index', [
+                    'pegawai' => $result['data'],
+                    'links' => $result['links'],
+                    'currentPage' => $result['current_page'],
+                    'lastPage' => $result['last_page']
+                ]);
+            } else {
+                return view('pengaturan::pegawai.index')->with('error', 'Gagal mengambil data dari API');
+            }
+        } catch (\Exception $e) {
+            return view('pengaturan::pegawai.index')->with('error', $e->getMessage());
+        }
     }
 
     /**
