@@ -126,7 +126,7 @@
                             </div>
 
                             <!-- Modal Edit Pejabat -->
-                            {{-- <div class="modal fade" id="modalEditPejabat{{ $item->id }}" tabindex="-1" role="dialog"
+                            <div class="modal fade" id="modalEditPejabat{{ $item->id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="modalEditPejabatLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg" role="document">
                                     <form action="{{ route('pejabat.update', $item->id) }}" method="POST"
@@ -147,15 +147,15 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="pegawai_id">Pegawai</label>
-                                                            <select name="pegawai_id" class="form-control" required>
-                                                                <option value="" disabled>Pilih Pegawai</option>
+                                                            <select name="pegawai" class="form-control">
+                                                                <option value="">-- Pilih Pegawai --</option>
                                                                 @foreach ($pegawai as $p)
-                                                                    <option value="{{ $p->id }}"
-                                                                        {{ $item->pegawai_id == $p->id ? 'selected' : '' }}>
-                                                                        {{ $p->nama_lengkap }}
+                                                                    <option value="{{ $p['nama'] }}" {{ $item->pegawai == $p['nama'] ? 'selected' : '' }}>
+                                                                        {{ $p['nama'] }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
+                                                            
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="periode_mulai">Periode Mulai</label>
@@ -231,7 +231,7 @@
                                         </div>
                                     </form>
                                 </div>
-                            </div> --}}
+                            </div>
                         @endforeach
                     </table>
                     <br>
