@@ -125,7 +125,7 @@ class PejabatController extends Controller
         $pejabat = Pejabat::findOrFail($id);
 
         $request->validate([
-            'pegawai_id' => 'required|exists:pegawai,id',
+            'pegawai' => 'required',
             'periode_mulai' => 'required|date',
             'periode_selesai' => 'nullable|date',
             'status' => 'required|in:0,1',
@@ -135,7 +135,7 @@ class PejabatController extends Controller
         ]);
 
         $data = [
-            'pegawai_id' => $request->pegawai_id,
+            'pegawai' => $request->pegawai,
             'periode_mulai' => $request->periode_mulai,
             'periode_selesai' => $request->periode_selesai,
             'status' => $request->status,
