@@ -19,6 +19,7 @@ class CreatePejabatTable extends Migration
             $table->date('periode_selesai');
             $table->boolean('status');
             $table->string('pegawai');
+            $table->string('nip');
             $table->string('sk');
             $table->unsignedBigInteger('unit_id')->nullable();
             $table->unsignedBigInteger('jabatan_id');

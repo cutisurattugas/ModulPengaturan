@@ -16,32 +16,9 @@ class PegawaiController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index(Request $request)
-    {
-        try {
-            $token = 'token-api';
-
-            $page = $request->query('page', 1);
-
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $token,
-            ])->get("https://sit.poliwangi.ac.id/v2/api/v1/sitapi/pegawai?page%5Bnumber%5D=$page");
-
-            if ($response->successful()) {
-                $result = $response->json();
-
-                return view('pengaturan::pegawai.index', [
-                    'pegawai' => $result['data'],
-                    'links' => $result['links'],
-                    'currentPage' => $result['current_page'],
-                    'lastPage' => $result['last_page']
-                ]);
-            } else {
-                return view('pengaturan::pegawai.index')->with('error', 'Gagal mengambil data dari API');
-            }
-        } catch (\Exception $e) {
-            return view('pengaturan::pegawai.index')->with('error', $e->getMessage());
-        }
+    public function index() {
+        $pegawai = Pegawai::orderBy('nama', 'asc')->paginate(30);
+        return view('pengaturan::pegawai.index', compact('pegawai'));
     }
 
     /**

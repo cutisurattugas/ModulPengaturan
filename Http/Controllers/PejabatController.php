@@ -20,28 +20,10 @@ class PejabatController extends Controller
      */
     public function index(Request $request)
     {
-        // Ambil data unit dan jabatan dari database
         $unit = Unit::all();
         $jabatan = Jabatan::where('tipe_jabatan', 'Struktural')->get();
-
-        // Ambil data pejabat dari database
         $pejabat = Pejabat::paginate(10);
-
-        // Ambil data pegawai dari API dengan pagination
-        $page = $request->query('page', 1);
-        $token = 'token-api';
-
-        // Mengambil data pegawai dari API secara bertahap menggunakan pagination
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-        ])->get("https://sit.poliwangi.ac.id/v2/api/v1/sitapi/pegawai?page[number]=$page");
-
-        if ($response->successful()) {
-            $result = $response->json();
-            $pegawai = collect($result['data']);
-        } else {
-            $pegawai = collect();
-        }
+        $pegawai = Pegawai::orderBy('nama', 'asc')->get();
 
         return view('pengaturan::pejabat.index', compact('pejabat', 'pegawai', 'jabatan', 'unit'));
     }
@@ -63,9 +45,9 @@ class PejabatController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
         $request->validate([
             'pegawai' => 'required',
+            'nip' => 'required',
             'periode_mulai' => 'required|date',
             'periode_selesai' => 'nullable|date|after_or_equal:periode_mulai',
             'status' => 'required|boolean',
@@ -83,6 +65,7 @@ class PejabatController extends Controller
 
         Pejabat::create([
             'pegawai' => $request->pegawai,
+            'nip' => $request->nip,
             'periode_mulai' => $request->periode_mulai,
             'periode_selesai' => $request->periode_selesai,
             'status' => $request->status,
@@ -123,9 +106,9 @@ class PejabatController extends Controller
     public function update(Request $request, $id)
     {
         $pejabat = Pejabat::findOrFail($id);
-
         $request->validate([
             'pegawai' => 'required',
+            'nip' => 'required',
             'periode_mulai' => 'required|date',
             'periode_selesai' => 'nullable|date',
             'status' => 'required|in:0,1',
@@ -136,6 +119,7 @@ class PejabatController extends Controller
 
         $data = [
             'pegawai' => $request->pegawai,
+            'nip' => $request->nip,
             'periode_mulai' => $request->periode_mulai,
             'periode_selesai' => $request->periode_selesai,
             'status' => $request->status,

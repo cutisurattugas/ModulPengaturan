@@ -1,5 +1,8 @@
 @extends('adminlte::page')
 @section('title', 'Pejabat')
+@section('css')
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+@stop
 @section('content_header')
     <h1 class="m-0 text-dark"></h1>
 @stop
@@ -54,10 +57,10 @@
                                     {{ $item->pegawai }}
                                 </td>
                                 <td>
-                                    @if ($item->unit == NULL)
+                                    @if ($item->unit == null)
                                         <p>-</p>
-                                    @elseif($item->unit != NULL)
-                                        {{$item->unit->nama}}
+                                    @elseif($item->unit != null)
+                                        {{ $item->unit->nama }}
                                     @endif
                                 </td>
                                 <td>
@@ -147,15 +150,21 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="pegawai_id">Pegawai</label>
-                                                            <select name="pegawai" class="form-control">
+                                                            <select name="pegawai" id="pegawaiDropdownEdit">
                                                                 <option value="">-- Pilih Pegawai --</option>
                                                                 @foreach ($pegawai as $p)
-                                                                    <option value="{{ $p['nama'] }}" {{ $item->pegawai == $p['nama'] ? 'selected' : '' }}>
-                                                                        {{ $p['nama'] }}
+                                                                    <option value="{{ $p->nama }}"
+                                                                        {{ $item->pegawai == $p->nama ? 'selected' : '' }}>
+                                                                        {{ $p->nama }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
-                                                            
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="nip">NIP</label>
+                                                            <input type="text" name="nip"
+                                                                class="form-control nipInput" value="{{ $item->nip }}"
+                                                                readonly required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="periode_mulai">Periode Mulai</label>
@@ -165,8 +174,13 @@
                                                         <div class="form-group">
                                                             <label for="periode_selesai">Periode Selesai</label>
                                                             <input type="date" name="periode_selesai"
-                                                                class="form-control" value="{{ $item->periode_selesai }}">
+                                                                class="form-control"
+                                                                value="{{ $item->periode_selesai }}">
                                                         </div>
+                                                    </div>
+
+                                                    <!-- Kolom 2 -->
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="status">Status</label>
                                                             <select name="status" class="form-control" required>
@@ -178,10 +192,6 @@
                                                                 </option>
                                                             </select>
                                                         </div>
-                                                    </div>
-
-                                                    <!-- Kolom 2 -->
-                                                    <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="unit_id">Unit</label>
                                                             <select name="unit_id" class="form-control" required>
@@ -243,6 +253,7 @@
             </div>
         </div>
     </div>
+    
     <!-- Modal Tambah Pejabat -->
     <div class="modal fade" id="modalTambahPejabat" tabindex="-1" role="dialog"
         aria-labelledby="modalTambahPejabatLabel" aria-hidden="true">
@@ -262,13 +273,17 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="pegawai">Pegawai</label>
-                                    <select name="pegawai" class="form-control">
+                                    <select name="pegawai" id="pegawaiDropdown">
                                         <option value="">-- Pilih Pegawai --</option>
-                                        @foreach($pegawai as $item)
-                                            <option value="{{ $item['nama'] }}">{{ $item['nama'] }}</option>
+                                        @foreach ($pegawai as $item)
+                                            <option value="{{ $item->nama }}">{{ $item->nama }}</option>
                                         @endforeach
                                     </select>
-                                    
+                                </div>
+                                <div class="form-group">
+                                    <label for="nip">NIP</label>
+                                    <input type="text" name="nip" class="form-control nipInput" value=""
+                                        readonly required>
                                 </div>
                                 <div class="form-group">
                                     <label for="periode_mulai">Periode Mulai</label>
@@ -278,6 +293,10 @@
                                     <label for="periode_selesai">Periode Selesai</label>
                                     <input type="date" name="periode_selesai" class="form-control">
                                 </div>
+                            </div>
+
+                            <!-- Kolom 2 -->
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="status">Status</label>
                                     <select name="status" class="form-control" required>
@@ -285,10 +304,7 @@
                                         <option value="0">Non-Aktif</option>
                                     </select>
                                 </div>
-                            </div>
 
-                            <!-- Kolom 2 -->
-                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="unit_id">Unit</label>
                                     <select name="unit_id" class="form-control">
@@ -325,7 +341,9 @@
 @stop
 @section('adminlte_js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 
+    {{-- alert hapus data --}}
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll(".delete-btn").forEach(button => {
@@ -353,11 +371,66 @@
         });
     </script>
 
+    {{-- lihat isi sk (pdf) --}}
     <script>
         function lihatSK(fileUrl) {
             document.getElementById('iframeSK').src = fileUrl;
             $('#modalLihatSK').modal('show');
         }
     </script>
+
+    {{-- otomatis isi nip --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pegawaiData = @json($pegawai);
+
+            document.querySelectorAll('.pegawaiDropdown').forEach(function(dropdown) {
+                dropdown.addEventListener('change', function() {
+                    const selectedNama = this.value;
+
+                    // Cari input NIP yang paling dekat dengan dropdown yang sedang dipilih
+                    let nipInput = this.closest('.form-group')?.nextElementSibling?.querySelector(
+                        '.nipInput');
+
+                    const selectedPegawai = pegawaiData.find(p => p.nama === selectedNama);
+
+                    if (selectedPegawai && nipInput) {
+                        nipInput.value = selectedPegawai.nip;
+                    } else if (nipInput) {
+                        nipInput.value = '';
+                    }
+                });
+            });
+        });
+    </script>
+
+    {{-- tom select untuk dropdown add --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            new TomSelect('#pegawaiDropdown', {
+                create: false,
+                sortField: {
+                    field: "text",
+                    direction: "asc"
+                },
+                placeholder: "-- Pilih Pegawai --"
+            });
+        });
+    </script>
+
+    {{-- tom select untuk dropdown edit --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            new TomSelect('#pegawaiDropdownEdit', {
+                create: false,
+                sortField: {
+                    field: "text",
+                    direction: "asc"
+                },
+                placeholder: "-- Pilih Pegawai --"
+            });
+        });
+    </script>
+
 
 @stop

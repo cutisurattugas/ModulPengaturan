@@ -34,61 +34,21 @@
                                     <td>
                                         <center>{{ $loop->iteration }}</center>
                                     </td>
-                                    <td>{{ $item['nama'] }}</td>
-                                    <td>{{ $item['nip'] }}</td>
+                                    <td>{{ $item->nama}}</td>
+                                    <td>{{ $item->nip}}</td>
                                     <td>
-                                        {{ $item['gelar_dpn'] ?? '' }}{{ $item['gelar_dpn'] ? ' ' : '' }}{{ $item['nama'] }}{{ $item['gelar_blk'] ? ', ' . $item['gelar_blk'] : '' }}
+                                        {{ $item->gelar_dpn ?? '' }}{{ $item->gelar_dpn ? ' ' : '' }}{{ $item->nama }}{{ $item->gelar_blk ? ', ' . $item->gelar_blk : '' }}
                                     </td>
-                                    <td>{{ $item['jenis_kelamin'] == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
-                                    <td>{{ $item['username'] ?? '-' }}</td>
+                                    <td>{{ $item->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
+                                    <td>{{ $item->username ?? '-' }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
 
                     <br>
-                    {{-- Paginasi --}}
-                    @php
-                        function getPageNumber($url)
-                        {
-                            if (!is_string($url) || empty($url)) {
-                                return 1;
-                            }
-                            $parts = parse_url($url);
-                            parse_str($parts['query'] ?? '', $query);
-
-                            // Tangani kasus 'page' bisa array atau string
-                            if (isset($query['page'])) {
-                                return is_array($query['page']) ? $query['page']['number'] ?? 1 : (int) $query['page'];
-                            }
-
-                            return 1;
-                        }
-                    @endphp
-
-                    <div class="pagination">
-                        <ul class="pagination">
-                            @foreach ($links as $link)
-                                @php
-                                    $label = is_array($link['label'])
-                                        ? implode('', $link['label'])
-                                        : (string) $link['label'];
-                                    $pageNumber = getPageNumber($link['url']);
-                                @endphp
-
-                                @if ($link['url'])
-                                    <li class="page-item {{ $link['active'] ? 'active' : '' }}">
-                                        <a class="page-link" href="{{ url()->current() . '?page=' . $pageNumber }}">
-                                            {!! $label !!}
-                                        </a>
-                                    </li>
-                                @else
-                                    <li class="page-item disabled">
-                                        <span class="page-link">{!! $label !!}</span>
-                                    </li>
-                                @endif
-                            @endforeach
-                        </ul>
+                    <div class="d-flex">
+                        {!! $pegawai->links('pagination::bootstrap-4') !!}
                     </div>
                 </div>
             </div>
