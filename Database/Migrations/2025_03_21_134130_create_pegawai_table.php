@@ -16,17 +16,16 @@ class CreatePegawaiTable extends Migration
         Schema::create('pegawai', function (Blueprint $table) {
             $table->id();
             $table->string('nip');
-            $table->string('nik');
-            $table->string('nama_lengkap');
-            $table->string('email');
-            $table->string('no_hp');
-            $table->text('alamat');
-            $table->unsignedBigInteger('golongan_id');
-            $table->unsignedBigInteger('jabatan_struktural_id')->nullable();
-            $table->unsignedBigInteger('jabatan_fungsional_id');
-            $table->foreign('golongan_id')->references('id')->on('golongan')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('jabatan_struktural_id')->references('id')->on('jabatan')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('jabatan_fungsional_id')->references('id')->on('jabatan')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('nama');
+            $table->integer('staff')->nullable();
+            $table->unsignedBigInteger('jurusan')->nullable();
+            $table->unsignedBigInteger('prodi')->nullable();
+            $table->enum('jenis_kelamin', ['L', 'P'])->nullable();
+            $table->string('gelar_dpn')->nullable();
+            $table->string('gelar_blk')->nullable();
+            $table->string('status_karyawan')->nullable(); // pakai string karena datanya string
+            $table->string('username')->nullable();
+            $table->string('noid')->nullable();
             $table->timestamps();
         });
     }
