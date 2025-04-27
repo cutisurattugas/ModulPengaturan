@@ -47,7 +47,7 @@ class PejabatController extends Controller
     {
         $request->validate([
             'pegawai' => 'required',
-            'nip' => 'required',
+            'nip' => 'nullable',
             'periode_mulai' => 'required|date',
             'periode_selesai' => 'nullable|date|after_or_equal:periode_mulai',
             'status' => 'required|boolean',
@@ -65,7 +65,7 @@ class PejabatController extends Controller
 
         Pejabat::create([
             'pegawai' => $request->pegawai,
-            'nip' => $request->nip,
+            'nip' => $request->nip ?? '-',
             'periode_mulai' => $request->periode_mulai,
             'periode_selesai' => $request->periode_selesai,
             'status' => $request->status,
