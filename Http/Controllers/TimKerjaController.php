@@ -26,8 +26,9 @@ class TimKerjaController extends Controller
         $parent_id = 1; // id Politeknik Negeri Banyuwangi atau root tim
         $units = Unit::all();
         $allTimKerja = TimKerja::with('unit')->get();
+        $pegawai = Pegawai::all();
 
-        return view('pengaturan::tim.index', compact('timKerja', 'pejabat', 'parent_id', 'ketuaUtama', 'units', 'allTimKerja'));
+        return view('pengaturan::tim.index', compact('timKerja', 'pejabat', 'parent_id', 'ketuaUtama', 'units', 'allTimKerja', 'pegawai'));
     }
 
     /**
@@ -88,25 +89,25 @@ class TimKerjaController extends Controller
         $html = '';
         if ($unitInduk) {
             $html .= '<div class="border rounded p-2 mb-3">';
-        
+
             // Buka baris horizontal: nama + ikon
             $html .= '<div class="d-flex align-items-start justify-content-between">';
-        
+
             // Bagian kiri: nama + ikon
             $html .= '<div class="d-flex align-items-center">';
-        
+
             // Nama ketua
             if ($unitInduk->ketua) {
                 $html .= '<div class="me-2 fw-bold">' . $unitInduk->ketua->pegawai->nama_lengkap . ' [Ketua]</div>';
-        
+
                 // Ikon edit + delete
                 $html .= '<div class="d-flex align-items-center gap-2">';
-        
+
                 // Edit icon
                 $html .= '<a href="javascript:void(0);" data-toggle="modal" data-target="#modalEditPegawai" title="Edit">';
                 $html .= '<i class="fas fa-star text-info"></i>';
                 $html .= '</a>';
-        
+
                 // Delete icon
                 $html .= '<form action="#" method="POST" class="d-inline delete-form" onsubmit="return confirm(\'Yakin ingin menghapus?\')" style="display:inline">';
                 $html .= csrf_field() . method_field('DELETE');
@@ -114,47 +115,47 @@ class TimKerjaController extends Controller
                 $html .= '<i class="fas fa-trash text-danger"></i>';
                 $html .= '</button>';
                 $html .= '</form>';
-        
+
                 $html .= '</div>'; // end icon group
             } else {
                 $html .= '<em>Belum ada ketua</em>';
             }
-        
+
             $html .= '</div>'; // end d-flex align-items-center (nama + ikon)
-        
+
             $html .= '</div>'; // end d-flex utama
-        
+
             // Baris kedua: detail nip dan jabatan
             if ($unitInduk->ketua) {
                 $html .= '<div class="mt-1">';
                 $html .= '<small>' . $unitInduk->ketua->pegawai->nip . ' | ' . ($unitInduk->ketua->jabatan->nama_jabatan ?? '-') . ' | Sudah Buat SKP dengan Peran Ini</small>';
                 $html .= '</div>';
             }
-        
+
             $html .= '</div>'; // end container
         }
-             
+
 
         // Menampilkan tim kerja anak-anak
         foreach ($children as $child) {
             $html .= '<div class="border rounded p-2 mb-1">';
-            
+
             // Baris fleksibel: Nama unit + ikon
             $html .= '<div class="d-flex align-items-center justify-content-between">';
-        
+
             // Nama Unit Anak + Ikon Aksi langsung nempel
             $html .= '<div class="d-flex align-items-center">';
-        
+
             // Nama unit (toggle)
             $html .= '<a href="javascript:void(0)" class="toggle-child me-2 text-decoration-none" data-id="' . $child->id . '">';
             $html .= '<strong>' . $child->unit->nama . '</strong>';
             $html .= '</a>';
-        
+
             // Ikon edit
             $html .= '<a href="javascript:void(0);" data-toggle="modal" data-target="#modalEditPegawai" title="Edit" class="text-warning ms-1">';
             $html .= '<i class="fas fa-edit"></i>';
             $html .= '</a>';
-        
+
             // Ikon delete
             $html .= '<form action="#" method="POST" class="d-inline ms-2 delete-form" onsubmit="return confirm(\'Yakin ingin menghapus?\')" style="margin: 0">';
             $html .= csrf_field() . method_field('DELETE');
@@ -162,16 +163,16 @@ class TimKerjaController extends Controller
             $html .= '<i class="fas fa-trash"></i>';
             $html .= '</button>';
             $html .= '</form>';
-        
+
             $html .= '</div>'; // end nama + ikon
-        
+
             $html .= '</div>'; // end d-flex
-        
+
             // Container anak dalam
             $html .= '<div class="children-container mt-2" id="child-container-' . $child->id . '"></div>';
             $html .= '</div>'; // end border
         }
-        
+
 
         return response()->json([
             'status' => 'ok',

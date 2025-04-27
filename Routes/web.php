@@ -55,4 +55,8 @@ Route::prefix('pengaturan')->group(function() {
         Route::post('/store', 'TimKerjaController@store')->name('tim.store');
         Route::get('/{id}', 'TimKerjaController@show')->name('tim.show');
     });
+
+    Route::prefix('anggota')->group(function() {
+        Route::post('/store', 'AnggotaController@store')->name('anggota.store');
+    });
 });

@@ -5,7 +5,8 @@
     "keywords": [],
     "priority": 0,
     "providers": [
-        "Modules\\Pengaturan\\Providers\\PengaturanServiceProvider"
+        "Modules\\Pengaturan\\Providers\\PengaturanServiceProvider",
+        "Modules\\Pengaturan\\Providers\\UserServiceProvider"
     ],
     "aliases": {},
     "files": [],

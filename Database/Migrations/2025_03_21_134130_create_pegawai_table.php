@@ -15,6 +15,7 @@ class CreatePegawaiTable extends Migration
     {
         Schema::create('pegawai', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable();
             $table->string('nip');
             $table->string('nama');
             $table->integer('staff')->nullable();

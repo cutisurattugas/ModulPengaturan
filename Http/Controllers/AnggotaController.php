@@ -5,6 +5,7 @@ namespace Modules\Pengaturan\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Pengaturan\Entities\Anggota;
 
 class AnggotaController extends Controller
 {
@@ -13,8 +14,14 @@ class AnggotaController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
+
+        Anggota::create([
+            'tim_kerja_id' => $request->tim_kerja_id,
+            'pegawai_id' => $request->pegawai_id,
+        ]);
+
+        return redirect()->back()->with('success', 'Anggota berhasil ditambahkan.');
     }
 
 

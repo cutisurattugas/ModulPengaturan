@@ -1,7 +1,7 @@
 <div class="modal fade" id="modalTambahAnggota" tabindex="-1" role="dialog" aria-labelledby="modalTambahAnggotaLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form action="{{ route('tim.store') }}" method="POST">
+        <form action="{{ route('anggota.store') }}" method="POST">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">
@@ -14,9 +14,9 @@
                 <div class="modal-body">
                     <!-- Parent Unit -->
                     <div class="mb-3">
-                        <label for="parent_id" class="form-label">Parent</label>
-                        <select class="form-control" name="parent_id" id="parent_id" class="form-select">
-                            <option value="">-- Pilih Parent --</option>
+                        <label for="tim_kerja_id" class="form-label">Tim Kerja</label>
+                        <select class="form-control" name="tim_kerja_id" id="tim_kerja_id" class="form-select">
+                            <option value="">-- Pilih Tim Kerja --</option>
                             <!-- Opsional kalau root tetap ditampilkan -->
                             @foreach ($allTimKerja as $tim)
                             <option value="{{ $tim->id }}">
@@ -28,22 +28,11 @@
 
                     <!-- Nama Tim -->
                     <div class="form-group">
-                        <label>Nama Tim</label>
-                        <select class="form-control" name="unit_id">
-                            <option value="">- Pilih Unit -</option>
-                            @foreach ($units as $unit)
-                            <option value="{{ $unit->id }}">{{ $unit->nama }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Ketua Tim -->
-                    <div class="form-group">
-                        <label>Ketua Tim</label>
-                        <select name="ketua_id" class="form-control" required>
-                            <option value="">- Pilih Ketua -</option>
-                            @foreach ($pejabat as $p)
-                            <option value="{{ $p->id }}">{{ $p->pegawai->nama_lengkap }}</option>
+                        <label>Pegawai</label>
+                        <select class="form-control" name="pegawai_id">
+                            <option value="">- Pilih Pegawai -</option>
+                            @foreach ($pegawai as $item)
+                            <option value="{{ $item->id }}">{{ $item->nama }}</option>
                             @endforeach
                         </select>
                     </div>
