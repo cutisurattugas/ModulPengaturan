@@ -153,18 +153,20 @@
                                                             <select name="pegawai" id="pegawaiDropdownEdit">
                                                                 <option value="">-- Pilih Pegawai --</option>
                                                                 @foreach ($pegawai as $p)
-                                                                    <option value="{{ $p->nama }}"
+                                                                    <option 
+                                                                        value="{{ $p->gelar_dpn ?? '' }}{{ $p->gelar_dpn ? ' ' : '' }}{{ $p->nama }}{{ $p->gelar_blk ? ', ' . $p->gelar_blk : '' }}"
                                                                         {{ $item->pegawai == $p->nama ? 'selected' : '' }}>
-                                                                        {{ $p->nama }}
+                                                                        {{ $p->gelar_dpn ?? '' }}{{ $p->gelar_dpn ? ' ' : '' }}{{ $p->nama }}{{ $p->gelar_blk ? ', ' . $p->gelar_blk : '' }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
+                                                            
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="nip">NIP</label>
                                                             <input type="text" name="nip"
-                                                                class="form-control nipInput" value="{{ $item->nip }}"
-                                                                readonly required>
+                                                                class="form-control nipInputedit"
+                                                                value="{{ $item->nip }}" readonly required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="periode_mulai">Periode Mulai</label>
@@ -253,7 +255,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Modal Tambah Pejabat -->
     <div class="modal fade" id="modalTambahPejabat" tabindex="-1" role="dialog"
         aria-labelledby="modalTambahPejabatLabel" aria-hidden="true">
@@ -276,7 +278,10 @@
                                     <select name="pegawai" id="pegawaiDropdown">
                                         <option value="">-- Pilih Pegawai --</option>
                                         @foreach ($pegawai as $item)
-                                            <option value="{{ $item->nama }}">{{ $item->nama }}</option>
+                                            <option
+                                                value="{{ $item->gelar_dpn ?? '' }}{{ $item->gelar_dpn ? ' ' : '' }}{{ $item->nama }}{{ $item->gelar_blk ? ', ' . $item->gelar_blk : '' }}">
+                                                {{ $item->gelar_dpn ?? '' }}{{ $item->gelar_dpn ? ' ' : '' }}{{ $item->nama }}{{ $item->gelar_blk ? ', ' . $item->gelar_blk : '' }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -384,53 +389,39 @@
         document.addEventListener('DOMContentLoaded', function() {
             const pegawaiData = @json($pegawai);
 
-            document.querySelectorAll('.pegawaiDropdown').forEach(function(dropdown) {
-                dropdown.addEventListener('change', function() {
-                    const selectedNama = this.value;
+            function setupDropdown(selector, nipInputClass) {
+                document.querySelectorAll(selector).forEach(function(dropdown) {
+                    // Inisialisasi TomSelect
+                    new TomSelect(dropdown, {
+                        create: false,
+                        sortField: {
+                            field: "text",
+                            direction: "asc"
+                        },
+                        placeholder: "-- Pilih Pegawai --"
+                    });
 
-                    // Cari input NIP yang paling dekat dengan dropdown yang sedang dipilih
-                    let nipInput = this.closest('.form-group')?.nextElementSibling?.querySelector(
-                        '.nipInput');
+                    // Event listener saat dropdown berubah
+                    dropdown.addEventListener('change', function() {
+                        const selectedNama = this.value;
+                        let nipInput = this.closest('.form-group')?.nextElementSibling
+                            ?.querySelector('.' + nipInputClass);
+                        const selectedPegawai = pegawaiData.find(p => p.nama === selectedNama);
 
-                    const selectedPegawai = pegawaiData.find(p => p.nama === selectedNama);
-
-                    if (selectedPegawai && nipInput) {
-                        nipInput.value = selectedPegawai.nip;
-                    } else if (nipInput) {
-                        nipInput.value = '';
-                    }
+                        if (selectedPegawai && nipInput) {
+                            nipInput.value = selectedPegawai.nip;
+                        } else if (nipInput) {
+                            nipInput.value = '';
+                        }
+                    });
                 });
-            });
+            }
+
+            // Setup untuk dropdown Add
+            setupDropdown('#pegawaiDropdown', 'nipInput');
+
+            // Setup untuk dropdown Edit
+            setupDropdown('#pegawaiDropdownEdit', 'nipInputedit');
         });
     </script>
-
-    {{-- tom select untuk dropdown add --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            new TomSelect('#pegawaiDropdown', {
-                create: false,
-                sortField: {
-                    field: "text",
-                    direction: "asc"
-                },
-                placeholder: "-- Pilih Pegawai --"
-            });
-        });
-    </script>
-
-    {{-- tom select untuk dropdown edit --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            new TomSelect('#pegawaiDropdownEdit', {
-                create: false,
-                sortField: {
-                    field: "text",
-                    direction: "asc"
-                },
-                placeholder: "-- Pilih Pegawai --"
-            });
-        });
-    </script>
-
-
 @stop
