@@ -46,8 +46,7 @@ class PejabatController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'pegawai' => 'required',
-            'nip' => 'nullable',
+            'pegawai_id' => 'required',
             'periode_mulai' => 'required|date',
             'periode_selesai' => 'nullable|date|after_or_equal:periode_mulai',
             'status' => 'required|boolean',
@@ -64,8 +63,8 @@ class PejabatController extends Controller
         }
 
         Pejabat::create([
-            'pegawai' => $request->pegawai,
-            'nip' => $request->nip ?? '-',
+            'pegawai_id' => $request->pegawai_id,
+            'nip' => Pegawai::where('id', $request->pegawai_id)->first()->nip ?? '-',
             'periode_mulai' => $request->periode_mulai,
             'periode_selesai' => $request->periode_selesai,
             'status' => $request->status,
@@ -107,19 +106,18 @@ class PejabatController extends Controller
     {
         $pejabat = Pejabat::findOrFail($id);
         $request->validate([
-            'pegawai' => 'required',
-            'nip' => 'required',
+            'pegawai_id' => 'required',
             'periode_mulai' => 'required|date',
             'periode_selesai' => 'nullable|date',
             'status' => 'required|in:0,1',
-            'unit_id' => 'required|exists:units,id',
+            'unit_id' => 'nullable|exists:units,id',
             'jabatan_id' => 'required|exists:jabatan,id',
             'sk' => 'nullable|mimes:pdf|max:2048',
         ]);
 
         $data = [
-            'pegawai' => $request->pegawai,
-            'nip' => $request->nip,
+            'pegawai_id' => $request->pegawai_id,
+            'nip' => Pegawai::where('id', $request->pegawai_id)->first()->nip ?? '-',
             'periode_mulai' => $request->periode_mulai,
             'periode_selesai' => $request->periode_selesai,
             'status' => $request->status,

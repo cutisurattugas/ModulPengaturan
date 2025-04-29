@@ -66,7 +66,7 @@
                         </td>
                         <td colspan="2">
                             <span>
-                                {{ $ketuaUtama->pegawai }} [Ketua]
+                                {{ $ketuaUtama->pegawai->gelar_dpn ?? '' }}{{ $ketuaUtama->pegawai->gelar_dpn ? ' ' : '' }}{{ $ketuaUtama->pegawai->nama }}{{ $ketuaUtama->pegawai->gelar_blk ? ', ' . $ketuaUtama->pegawai->gelar_blk : '' }}  [Ketua]
 
                                 {{-- Ikon Edit --}}
                                 <a class="text-info ms-2" style="text-decoration: none;" data-toggle="modal" data-target="#modalEditPegawai" title="Edit">
@@ -84,7 +84,7 @@
                             </span>
                             <br>
                             <small>
-                                {{ $ketuaUtama->pegawai }} |
+                                {{ $ketuaUtama->pegawai->nip }} |
                                 {{ $ketuaUtama->jabatan->nama_jabatan }} |
                                 Sudah Buat SKP dengan Peran Ini
                             </small>
@@ -180,7 +180,9 @@
                         <select name="ketua_id" class="form-control" required>
                             <option value="">- Pilih Ketua -</option>
                             @foreach ($pejabat as $p)
-                            <option value="{{ $p->id }}">{{ $p->pegawai }}</option>
+                            <option value="{{ $p->id }}">
+                                {{ $p->pegawai->gelar_dpn ?? '' }}{{ $p->pegawai->gelar_dpn ? ' ' : '' }}{{ $p->pegawai->nama }}{{ $p->pegawai->gelar_blk ? ', ' . $p->pegawai->gelar_blk : '' }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
