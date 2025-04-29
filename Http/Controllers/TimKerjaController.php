@@ -98,7 +98,12 @@ class TimKerjaController extends Controller
 
             // Nama ketua
             if ($unitInduk->ketua) {
-                $html .= '<div class="me-2 fw-bold">' . $unitInduk->ketua->pegawai->nama_lengkap . ' [Ketua]</div>';
+                $pegawai = $unitInduk->ketua->pegawai;
+                $namaLengkap = ($pegawai->gelar_dpn ?? '') . 
+                               ($pegawai->gelar_dpn ? ' ' : '') . 
+                               ($pegawai->nama ?? '') . 
+                               ($pegawai->gelar_blk ? ', ' . $pegawai->gelar_blk : '');
+                $html .= '<div class="me-2 fw-bold">' . $namaLengkap . ' [Ketua]</div>';
 
                 // Ikon edit + delete
                 $html .= '<div class="d-flex align-items-center gap-2">';

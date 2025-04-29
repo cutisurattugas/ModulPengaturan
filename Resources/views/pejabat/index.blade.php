@@ -54,7 +54,7 @@
                                     <center>{{ $loop->iteration }}</center>
                                 </td>
                                 <td>
-                                    {{ $item->pegawai }}
+                                    {{ $item->pegawai->gelar_dpn ?? '' }}{{ $item->pegawai->gelar_dpn ? ' ' : '' }}{{ $item->pegawai->nama }}{{ $item->pegawai->gelar_blk ? ', ' . $item->pegawai->gelar_blk : '' }}
                                 </td>
                                 <td>
                                     @if ($item->unit == null)
@@ -150,23 +150,15 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="pegawai_id">Pegawai</label>
-                                                            <select name="pegawai" id="pegawaiDropdownEdit">
+                                                            <select name="pegawai_id" id="pegawaiDropdownEdit">
                                                                 <option value="">-- Pilih Pegawai --</option>
                                                                 @foreach ($pegawai as $p)
-                                                                    <option 
-                                                                        value="{{ $p->gelar_dpn ?? '' }}{{ $p->gelar_dpn ? ' ' : '' }}{{ $p->nama }}{{ $p->gelar_blk ? ', ' . $p->gelar_blk : '' }}"
-                                                                        {{ $item->pegawai == $p->nama ? 'selected' : '' }}>
+                                                                    <option value="{{ $p->id }}"
+                                                                        {{ $item->pegawai_id == $p->id ? 'selected' : '' }}>
                                                                         {{ $p->gelar_dpn ?? '' }}{{ $p->gelar_dpn ? ' ' : '' }}{{ $p->nama }}{{ $p->gelar_blk ? ', ' . $p->gelar_blk : '' }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
-                                                            
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="nip">NIP</label>
-                                                            <input type="text" name="nip"
-                                                                class="form-control nipInputedit"
-                                                                value="{{ $item->nip }}" readonly required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="periode_mulai">Periode Mulai</label>
@@ -179,10 +171,6 @@
                                                                 class="form-control"
                                                                 value="{{ $item->periode_selesai }}">
                                                         </div>
-                                                    </div>
-
-                                                    <!-- Kolom 2 -->
-                                                    <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="status">Status</label>
                                                             <select name="status" class="form-control" required>
@@ -194,10 +182,14 @@
                                                                 </option>
                                                             </select>
                                                         </div>
+                                                    </div>
+
+                                                    <!-- Kolom 2 -->
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="unit_id">Unit</label>
-                                                            <select name="unit_id" class="form-control" required>
-                                                                <option value="" disabled>Pilih Unit</option>
+                                                            <select name="unit_id" class="form-control">
+                                                                <option value="">Pilih Unit</option>
                                                                 @foreach ($unit as $u)
                                                                     <option value="{{ $u->id }}"
                                                                         {{ $item->unit_id == $u->id ? 'selected' : '' }}>
@@ -275,20 +267,14 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="pegawai">Pegawai</label>
-                                    <select name="pegawai" id="pegawaiDropdown">
+                                    <select name="pegawai_id" id="pegawaiDropdown">
                                         <option value="">-- Pilih Pegawai --</option>
                                         @foreach ($pegawai as $item)
-                                            <option
-                                                value="{{ $item->gelar_dpn ?? '' }}{{ $item->gelar_dpn ? ' ' : '' }}{{ $item->nama }}{{ $item->gelar_blk ? ', ' . $item->gelar_blk : '' }}">
+                                            <option value="{{ $item->id }}">
                                                 {{ $item->gelar_dpn ?? '' }}{{ $item->gelar_dpn ? ' ' : '' }}{{ $item->nama }}{{ $item->gelar_blk ? ', ' . $item->gelar_blk : '' }}
                                             </option>
                                         @endforeach
                                     </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="nip">NIP</label>
-                                    <input type="text" name="nip" class="form-control nipInput" value=""
-                                        readonly required>
                                 </div>
                                 <div class="form-group">
                                     <label for="periode_mulai">Periode Mulai</label>
@@ -298,10 +284,6 @@
                                     <label for="periode_selesai">Periode Selesai</label>
                                     <input type="date" name="periode_selesai" class="form-control">
                                 </div>
-                            </div>
-
-                            <!-- Kolom 2 -->
-                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="status">Status</label>
                                     <select name="status" class="form-control" required>
@@ -309,7 +291,10 @@
                                         <option value="0">Non-Aktif</option>
                                     </select>
                                 </div>
+                            </div>
 
+                            <!-- Kolom 2 -->
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="unit_id">Unit</label>
                                     <select name="unit_id" class="form-control">
@@ -384,44 +369,25 @@
         }
     </script>
 
-    {{-- otomatis isi nip --}}
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const pegawaiData = @json($pegawai);
+        // Fungsi untuk inisialisasi Tom Select pada elemen tertentu
+        function initTomSelect(selector) {
+            new TomSelect(selector, {
+                create: false,
+                sortField: {
+                    field: "text",
+                    direction: "asc"
+                },
+                placeholder: "Pilih Pegawai...",
+                searchField: ["text"], // bisa diubah tergantung struktur option
+            });
+        }
 
-            function setupDropdown(selector, nipInputClass) {
-                document.querySelectorAll(selector).forEach(function(dropdown) {
-                    // Inisialisasi TomSelect
-                    new TomSelect(dropdown, {
-                        create: false,
-                        sortField: {
-                            field: "text",
-                            direction: "asc"
-                        },
-                        placeholder: "-- Pilih Pegawai --"
-                    });
-
-                    // Event listener saat dropdown berubah
-                    dropdown.addEventListener('change', function() {
-                        const selectedNama = this.value;
-                        let nipInput = this.closest('.form-group')?.nextElementSibling
-                            ?.querySelector('.' + nipInputClass);
-                        const selectedPegawai = pegawaiData.find(p => p.nama === selectedNama);
-
-                        if (selectedPegawai && nipInput) {
-                            nipInput.value = selectedPegawai.nip;
-                        } else if (nipInput) {
-                            nipInput.value = '';
-                        }
-                    });
-                });
-            }
-
-            // Setup untuk dropdown Add
-            setupDropdown('#pegawaiDropdown', 'nipInput');
-
-            // Setup untuk dropdown Edit
-            setupDropdown('#pegawaiDropdownEdit', 'nipInputedit');
+        // Inisialisasi untuk kedua dropdown
+        document.addEventListener("DOMContentLoaded", function() {
+            initTomSelect("#pegawaiDropdown");
+            initTomSelect("#pegawaiDropdownEdit");
         });
     </script>
+
 @stop
