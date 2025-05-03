@@ -13,12 +13,12 @@ class TimKerja extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['unit_id', 'parent_id', 'ketua_id'];
 
-    public function parent()
+    public function parentUnit()
     {
         return $this->belongsTo(TimKerja::class, 'parent_id');
     }
 
-    public function children()
+    public function subUnits()
     {
         return $this->hasMany(TimKerja::class, 'parent_id');
     }
@@ -30,12 +30,18 @@ class TimKerja extends Model
 
     public function anggota()
     {
-        return $this->belongsToMany(Pegawai::class, 'tim_kerja_anggota', 'tim_kerja_id', 'pegawai_id');
+        return $this->belongsToMany(Pegawai::class, 'tim_kerja_anggota', 'tim_kerja_id', 'pegawai_id')->wherePivot('peran', 'Anggota');
     }
 
     public function childrenRecursive()
     {
         return $this->children()->with('ketua', 'childrenRecursive');
+    }
+
+    public function allRelatedUnits()
+    {
+        // Ambil sub-unit dan parent unit
+        return $this->children->merge($this->parent ? collect([$this->parent]) : collect());
     }
 
     public function unit()

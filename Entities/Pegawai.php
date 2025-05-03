@@ -5,6 +5,7 @@ namespace Modules\Pengaturan\Entities;
 use App\Models\Core\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Penilaian\Entities\RencanaKerja;
 
 class Pegawai extends Model
 {
@@ -28,12 +29,12 @@ class Pegawai extends Model
 
     public function timKerja()
     {
-        return $this->hasMany(TimKerja::class, 'pegawai_id', 'id');
+        return $this->belongsToMany(TimKerja::class, 'tim_kerja_anggota')->withPivot('peran');
     }
 
     public function timKerjaAnggota()
     {
-        return $this->belongsToMany(TimKerja::class, 'tim_kerja_anggota', 'pegawai_id', 'tim_kerja_id');
+        return $this->belongsToMany(TimKerja::class, 'tim_kerja_anggota', 'pegawai_id', 'tim_kerja_id')->withPivot('peran');
     }
 
     public function anggota(){
@@ -43,5 +44,28 @@ class Pegawai extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function pejabat(){
+        return $this->hasOne(Pejabat::class);
+    }
+
+    public function rencanakerja(){
+        return $this->hasMany(RencanaKerja::class);
+    }
+
+    public function timKerjaKetua(){
+        return $this->belongsToMany(TimKerja::class, 'tim_kerja_anggota')
+            ->wherePivot('peran', 'Ketua');
+    }
+
+    public function bawahan(){
+        return $this->timKerjaKetua()
+            ->with('anggota')
+            ->get()
+            ->pluck('anggota')
+            ->flatten()
+            ->unique('id')
+            ->values();
     }
 }

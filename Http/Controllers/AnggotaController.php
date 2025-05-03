@@ -19,6 +19,7 @@ class AnggotaController extends Controller
         Anggota::create([
             'tim_kerja_id' => $request->tim_kerja_id,
             'pegawai_id' => $request->pegawai_id,
+            'peran' => 'Anggota'
         ]);
 
         return redirect()->back()->with('success', 'Anggota berhasil ditambahkan.');
