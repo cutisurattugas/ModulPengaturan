@@ -10,10 +10,7 @@ class Anggota extends Model
     use HasFactory;
 
     protected $table = 'tim_kerja_anggota';
-    protected $fillable = [
-        'tim_kerja_id',
-        'pegawai_id',
-    ];
+    protected $guarded = ['id'];
 
     public function timKerja()
     {

@@ -5,6 +5,7 @@ namespace Modules\Pengaturan\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Modules\Pengaturan\Entities\Pegawai;
 
 class PegawaiDataTableSeeder extends Seeder
 {
@@ -16,7 +17,6 @@ class PegawaiDataTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
         DB::table('pegawai')->insert([
             [
                 'nip' => '195602221988111001',
@@ -394,7 +394,7 @@ class PegawaiDataTableSeeder extends Seeder
                 'status_karyawan' => '7',
                 'username' => 'dedy',
                 'noid' => '44',
-            ], 
+            ],
             [
                 'nip' => '198711032021212001',
                 'nama' => 'DIAN MUJIANI',

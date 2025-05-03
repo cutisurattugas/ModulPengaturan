@@ -17,10 +17,14 @@ class CreateTimKerjaAnggotaTable extends Migration
             $table->id();
             $table->unsignedBigInteger('tim_kerja_id');
             $table->unsignedBigInteger('pegawai_id');
+            $table->string('peran')->nullable();
+            // $table->unsignedBigInteger('pejabat_id')->nullable();
+            // $table->string('periode')->nullable();
             $table->timestamps();
-        
+
             $table->foreign('tim_kerja_id')->references('id')->on('tim_kerja')->onDelete('cascade');
             $table->foreign('pegawai_id')->references('id')->on('pegawai')->onDelete('cascade');
+            // $table->foreign('pejabat_id')->references('id')->on('pejabat')->onDelete('cascade');
         });
     }
 

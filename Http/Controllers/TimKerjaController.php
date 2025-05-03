@@ -9,6 +9,8 @@ use Modules\Pengaturan\Entities\Pegawai;
 use Modules\Pengaturan\Entities\Pejabat;
 use Modules\Pengaturan\Entities\TimKerja;
 use Modules\Pengaturan\Entities\Unit;
+use Illuminate\Support\Facades\DB;
+use Modules\Pengaturan\Entities\Anggota;
 
 class TimKerjaController extends Controller
 {
@@ -26,9 +28,14 @@ class TimKerjaController extends Controller
         $parent_id = 1; // id Politeknik Negeri Banyuwangi atau root tim
         $units = Unit::all();
         $allTimKerja = TimKerja::with('unit')->get();
-        $pegawai = Pegawai::all();
+        $pegawai = Pegawai::with(['timKerjaAnggota.subUnits.unit', 'timKerjaAnggota.parentUnit.unit'])->get();
 
-        return view('pengaturan::tim.index', compact('timKerja', 'pejabat', 'parent_id', 'ketuaUtama', 'units', 'allTimKerja', 'pegawai'));
+        $onePegawai = Pegawai::with([
+            'timKerjaAnggota.unit',
+            'timKerjaAnggota.subUnits.unit', 'timKerjaAnggota.parentUnit.unit'
+        ])->where('id', '=', 35)->first();
+        return response()->json($onePegawai);
+        // return view('pengaturan::tim.index', compact('timKerja', 'pejabat', 'parent_id', 'ketuaUtama', 'units', 'allTimKerja', 'pegawai'));
     }
 
     /**
@@ -49,16 +56,42 @@ class TimKerjaController extends Controller
     {
         $request->validate([
             'unit_id' => 'required|exists:units,id',
-            'ketua_id' => 'required|exists:pegawai,id',
+            'ketua_id' => 'required',
             'parent_id' => 'required|exists:tim_kerja,id'
         ]);
-        $tim = TimKerja::create([
-            'unit_id' => $request->unit_id,
-            'parent_id' => $request->parent_id,
-            'ketua_id' => $request->ketua_id
-        ]);
 
-        return redirect()->back()->with('success', 'Tim berhasil ditambahkan.');
+        try {
+            $data = explode('|', $request->input('ketua_id'));
+            if (count($data) !== 2) {
+                return back()->withErrors(['ketua' => 'Format ketua tidak valid.']);
+            }
+            $pejabat_id = $data[0];
+            $pegawai_id = $data[1];
+
+            DB::transaction(function () use ($request, $pegawai_id, $pejabat_id) {
+                $timKerja = TimKerja::create([
+                    'unit_id' => $request->unit_id,
+                    'parent_id' => $request->parent_id,
+                    'ketua_id' => $pejabat_id
+                ]);
+
+                Anggota::create([
+                    'tim_kerja_id' => $timKerja->id,
+                    'pegawai_id' => $pegawai_id,
+                    'peran' => $pejabat_id ? 'Ketua' : null,
+                ]);
+            });
+
+            // $tim = TimKerja::create([
+            //     'unit_id' => $request->unit_id,
+            //     'parent_id' => $request->parent_id,
+            //     'ketua_id' => $request->ketua_id ?? null
+            // ]);
+
+            return redirect()->back()->with('success', 'Tim berhasil ditambahkan.');
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage());
+        }
     }
 
     /**
@@ -99,9 +132,9 @@ class TimKerjaController extends Controller
             // Nama ketua
             if ($unitInduk->ketua) {
                 $pegawai = $unitInduk->ketua->pegawai;
-                $namaLengkap = ($pegawai->gelar_dpn ?? '') . 
-                               ($pegawai->gelar_dpn ? ' ' : '') . 
-                               ($pegawai->nama ?? '') . 
+                $namaLengkap = ($pegawai->gelar_dpn ?? '') .
+                               ($pegawai->gelar_dpn ? ' ' : '') .
+                               ($pegawai->nama ?? '') .
                                ($pegawai->gelar_blk ? ', ' . $pegawai->gelar_blk : '');
                 $html .= '<div class="me-2 fw-bold">' . $namaLengkap . ' [Ketua]</div>';
 
