@@ -30,12 +30,12 @@ class TimKerjaController extends Controller
         $allTimKerja = TimKerja::with('unit')->get();
         $pegawai = Pegawai::with(['timKerjaAnggota.subUnits.unit', 'timKerjaAnggota.parentUnit.unit'])->get();
 
-        $onePegawai = Pegawai::with([
-            'timKerjaAnggota.unit',
-            'timKerjaAnggota.subUnits.unit', 'timKerjaAnggota.parentUnit.unit'
-        ])->where('id', '=', 35)->first();
-        return response()->json($onePegawai);
-        // return view('pengaturan::tim.index', compact('timKerja', 'pejabat', 'parent_id', 'ketuaUtama', 'units', 'allTimKerja', 'pegawai'));
+        // $onePegawai = Pegawai::with([
+        //     'timKerjaAnggota.unit',
+        //     'timKerjaAnggota.subUnits.unit', 'timKerjaAnggota.parentUnit.unit'
+        // ])->where('id', '=', 35)->first();
+        // return response()->json($onePegawai);
+        return view('pengaturan::tim.index', compact('timKerja', 'pejabat', 'parent_id', 'ketuaUtama', 'units', 'allTimKerja', 'pegawai'));
     }
 
     /**
