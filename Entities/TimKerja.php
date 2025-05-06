@@ -30,7 +30,7 @@ class TimKerja extends Model
 
     public function anggota()
     {
-        return $this->belongsToMany(Pegawai::class, 'tim_kerja_anggota', 'tim_kerja_id', 'pegawai_id')->wherePivot('peran', 'Anggota');
+        return $this->belongsToMany(Pegawai::class, 'tim_kerja_anggota', 'tim_kerja_id', 'pegawai_username')->wherePivot('peran', 'Anggota');
     }
 
     public function childrenRecursive()

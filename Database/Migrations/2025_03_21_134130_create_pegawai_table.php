@@ -25,7 +25,7 @@ class CreatePegawaiTable extends Migration
             $table->string('gelar_dpn')->nullable();
             $table->string('gelar_blk')->nullable();
             $table->string('status_karyawan')->nullable(); // pakai string karena datanya string
-            $table->string('username')->nullable();
+            $table->string('username')->unique();
             $table->string('noid')->nullable();
             $table->timestamps();
         });

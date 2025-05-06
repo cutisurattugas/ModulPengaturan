@@ -149,12 +149,12 @@
                                                     <!-- Kolom 1 -->
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label for="pegawai_id">Pegawai</label>
-                                                            <select name="pegawai_id" id="pegawaiDropdownEdit">
+                                                            <label for="pegawai_username">Pegawai</label>
+                                                            <select name="pegawai_username" id="pegawaiDropdownEdit">
                                                                 <option value="">-- Pilih Pegawai --</option>
                                                                 @foreach ($pegawai as $p)
                                                                     <option value="{{ $p->id }}"
-                                                                        {{ $item->pegawai_id == $p->id ? 'selected' : '' }}>
+                                                                        {{ $item->pegawai_username == $p->username ? 'selected' : '' }}>
                                                                         {{ $p->gelar_dpn ?? '' }}{{ $p->gelar_dpn ? ' ' : '' }}{{ $p->nama }}{{ $p->gelar_blk ? ', ' . $p->gelar_blk : '' }}
                                                                     </option>
                                                                 @endforeach
@@ -267,10 +267,10 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="pegawai">Pegawai</label>
-                                    <select name="pegawai_id" id="pegawaiDropdown">
+                                    <select name="pegawai_username" id="pegawaiDropdown">
                                         <option value="">-- Pilih Pegawai --</option>
                                         @foreach ($pegawai as $item)
-                                            <option value="{{ $item->id }}">
+                                            <option value="{{ $item->username }}">
                                                 {{ $item->gelar_dpn ?? '' }}{{ $item->gelar_dpn ? ' ' : '' }}{{ $item->nama }}{{ $item->gelar_blk ? ', ' . $item->gelar_blk : '' }}
                                             </option>
                                         @endforeach
