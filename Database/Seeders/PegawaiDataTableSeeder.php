@@ -721,19 +721,6 @@ class PegawaiDataTableSeeder extends Seeder
                 'noid' => '95'
             ],
             [
-                'nip' => '197711212010122001',
-                'nama' => 'SISKA RAHMAWATI',
-                'staff' => 18,
-                'jurusan' => null,
-                'prodi' => null,
-                'jenis_kelamin' => 'P',
-                'gelar_dpn' => null,
-                'gelar_blk' => null,
-                'status_karyawan' => null,
-                'username' => null,
-                'noid' => '99'
-            ],
-            [
                 'nip' => '198307132010122003',
                 'nama' => 'WAHYU YULIANINGSIH',
                 'staff' => 18,
