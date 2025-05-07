@@ -5,6 +5,7 @@ namespace Modules\Pengaturan\Entities;
 use App\Models\Core\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Penilaian\Entities\Cascading;
 use Modules\Penilaian\Entities\RencanaKerja;
 
 class Pegawai extends Model
@@ -29,16 +30,17 @@ class Pegawai extends Model
 
     public function timKerja()
     {
-        return $this->belongsToMany(TimKerja::class, 'tim_kerja_anggota')->withPivot('peran');
+        return $this->hasMany(TimKerja::class, 'tim_kerja_anggota', 'pegawai_username')->withPivot('peran');
     }
 
     public function timKerjaAnggota()
     {
-        return $this->belongsToMany(TimKerja::class, 'tim_kerja_anggota', 'pegawai_username', 'tim_kerja_id')->withPivot('peran');
+        return $this->belongsToMany(TimKerja::class, 'tim_kerja_anggota', 'pegawai_username', 'tim_kerja_id', 'username',                  // primary key lokal (model Pegawai)
+        'id')->withPivot('peran');
     }
 
     public function anggota(){
-        return $this->hasOne(Anggota::class);
+        return $this->hasOne(Anggota::class, 'pegawai_username', 'username');
     }
 
     public function user()
@@ -51,7 +53,7 @@ class Pegawai extends Model
     }
 
     public function rencanakerja(){
-        return $this->hasMany(RencanaKerja::class);
+        return $this->hasMany(RencanaKerja::class, 'pegawai_username', 'username');
     }
 
     public function timKerjaKetua(){
@@ -67,5 +69,10 @@ class Pegawai extends Model
             ->flatten()
             ->unique('id')
             ->values();
+    }
+
+    public function cascading()
+    {
+        return $this->hasMany(Cascading::class, 'pegawai_username', 'username');
     }
 }
