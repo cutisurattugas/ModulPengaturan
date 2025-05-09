@@ -64,13 +64,14 @@
                                     @endif
                                 </td>
                                 <td>
-                                    {{ $item->jabatan->nama_jabatan }}
+                                    {{ $item->jabatan->jabatan }}
                                 </td>
                                 <td>
-                                    {{ $item->periode_mulai }} - {{ $item->periode_selesai }}
+                                    {{ date('d M Y', strtotime($item->mulai)) }} -
+                                    {{ date('d M Y', strtotime($item->selesai)) }}
                                 </td>
                                 <td>
-                                    @if ($item->status == '1')
+                                    @if ($item->status == 'Aktif')
                                         <button class="btn btn-outline-primary btn-sm">Aktif</button>
                                     @else
                                         <button class="btn btn-outline-danger btn-sm">Non-Aktif</button>
@@ -78,7 +79,7 @@
                                 </td>
                                 <td>
                                     <button class="btn btn-info btn-sm"
-                                        onclick="lihatSK('{{ asset('storage/' . $item->sk) }}')">
+                                        onclick="lihatSK('{{ asset('storage/' . $item->SK) }}')">
                                         Lihat SK
                                     </button>
 
@@ -144,42 +145,45 @@
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
+
                                             <div class="modal-body">
                                                 <div class="row">
                                                     <!-- Kolom 1 -->
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label for="pegawai_username">Pegawai</label>
-                                                            <select name="pegawai_username" id="pegawaiDropdownEdit">
+                                                            <label for="pegawai_id">Pegawai</label>
+                                                            <select name="pegawai_id" class="tomselect" required>
                                                                 <option value="">-- Pilih Pegawai --</option>
                                                                 @foreach ($pegawai as $p)
                                                                     <option value="{{ $p->id }}"
-                                                                        {{ $item->pegawai_username == $p->username ? 'selected' : '' }}>
+                                                                        {{ $item->pegawai_id == $p->id ? 'selected' : '' }}>
                                                                         {{ $p->gelar_dpn ?? '' }}{{ $p->gelar_dpn ? ' ' : '' }}{{ $p->nama }}{{ $p->gelar_blk ? ', ' . $p->gelar_blk : '' }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
+
                                                         <div class="form-group">
-                                                            <label for="periode_mulai">Periode Mulai</label>
-                                                            <input type="date" name="periode_mulai" class="form-control"
-                                                                value="{{ $item->periode_mulai }}" required>
+                                                            <label for="mulai">Periode Mulai</label>
+                                                            <input type="date" name="mulai" class="form-control"
+                                                                value="{{ $item->mulai }}" required>
                                                         </div>
+
                                                         <div class="form-group">
-                                                            <label for="periode_selesai">Periode Selesai</label>
-                                                            <input type="date" name="periode_selesai"
-                                                                class="form-control"
-                                                                value="{{ $item->periode_selesai }}">
+                                                            <label for="selesai">Periode Selesai</label>
+                                                            <input type="date" name="selesai" class="form-control"
+                                                                value="{{ $item->selesai }}">
                                                         </div>
+
                                                         <div class="form-group">
                                                             <label for="status">Status</label>
                                                             <select name="status" class="form-control" required>
-                                                                <option value="1"
-                                                                    {{ $item->status == 1 ? 'selected' : '' }}>Aktif
+                                                                <option value="Aktif"
+                                                                    {{ $item->status == 'Aktif' ? 'selected' : '' }}>Aktif
                                                                 </option>
-                                                                <option value="0"
-                                                                    {{ $item->status == 0 ? 'selected' : '' }}>Non-Aktif
-                                                                </option>
+                                                                <option value="Non Aktif"
+                                                                    {{ $item->status == 'Non Aktif' ? 'selected' : '' }}>
+                                                                    Non Aktif</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -188,7 +192,7 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="unit_id">Unit</label>
-                                                            <select name="unit_id" class="form-control">
+                                                            <select name="unit_id" class="tomselect">
                                                                 <option value="">Pilih Unit</option>
                                                                 @foreach ($unit as $u)
                                                                     <option value="{{ $u->id }}"
@@ -198,27 +202,29 @@
                                                                 @endforeach
                                                             </select>
                                                         </div>
+
                                                         <div class="form-group">
-                                                            <label for="jabatan_id">Jabatan</label>
-                                                            <select name="jabatan_id" class="form-control" required>
+                                                            <label for="jabatan">Jabatan</label>
+                                                            <select name="jabatan_id" class="tomselect" required>
                                                                 <option value="" disabled>Pilih Jabatan</option>
-                                                                @foreach ($jabatan as $j)
-                                                                    <option value="{{ $j->id }}"
-                                                                        {{ $item->jabatan_id == $j->id ? 'selected' : '' }}>
-                                                                        {{ $j->nama_jabatan }}
+                                                                @foreach ($jabatan as $jab)
+                                                                    <option value="{{ $jab->id }}"
+                                                                        {{ $item->jabatan_id == $jab->id ? 'selected' : '' }}>
+                                                                        {{ $jab->jabatan }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
+
                                                         <div class="form-group">
-                                                            <label for="sk">SK (Upload Baru Jika Ingin
+                                                            <label for="SK">SK (Upload Baru Jika Ingin
                                                                 Mengganti)</label>
-                                                            <input type="file" name="sk" class="form-control">
+                                                            <input type="file" name="SK" class="form-control" accept=".pdf">
                                                             <small class="text-muted">Kosongkan jika tidak ingin mengubah
                                                                 SK.</small>
                                                             <br>
-                                                            @if ($item->sk)
-                                                                <a href="{{ asset('storage/' . $item->sk) }}"
+                                                            @if ($item->SK)
+                                                                <a href="{{ asset('storage/' . $item->SK) }}"
                                                                     target="_blank" class="btn btn-sm btn-primary mt-2">
                                                                     Lihat SK Saat Ini
                                                                 </a>
@@ -227,6 +233,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
                                                     data-dismiss="modal">Tutup</button>
@@ -261,34 +268,38 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+
                     <div class="modal-body">
                         <div class="row">
                             <!-- Kolom 1 -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="pegawai">Pegawai</label>
-                                    <select name="pegawai_username" id="pegawaiDropdown">
+                                    <label for="pegawai_id">Pegawai</label>
+                                    <select name="pegawai_id" class="tomselect" required>
                                         <option value="">-- Pilih Pegawai --</option>
                                         @foreach ($pegawai as $item)
-                                            <option value="{{ $item->username }}">
+                                            <option value="{{ $item->id }}">
                                                 {{ $item->gelar_dpn ?? '' }}{{ $item->gelar_dpn ? ' ' : '' }}{{ $item->nama }}{{ $item->gelar_blk ? ', ' . $item->gelar_blk : '' }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="periode_mulai">Periode Mulai</label>
-                                    <input type="date" name="periode_mulai" class="form-control" required>
+                                    <label for="mulai">Periode Mulai</label>
+                                    <input type="date" name="mulai" class="form-control">
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="periode_selesai">Periode Selesai</label>
-                                    <input type="date" name="periode_selesai" class="form-control">
+                                    <label for="selesai">Periode Selesai</label>
+                                    <input type="date" name="selesai" class="form-control">
                                 </div>
+
                                 <div class="form-group">
                                     <label for="status">Status</label>
                                     <select name="status" class="form-control" required>
-                                        <option value="1">Aktif</option>
-                                        <option value="0">Non-Aktif</option>
+                                        <option value="Aktif">Aktif</option>
+                                        <option value="Non Aktif">Non Aktif</option>
                                     </select>
                                 </div>
                             </div>
@@ -297,29 +308,32 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="unit_id">Unit</label>
-                                    <select name="unit_id" class="form-control">
+                                    <select name="unit_id" class="tomselect">
                                         <option value="" disabled selected>Pilih Unit</option>
                                         @foreach ($unit as $u)
                                             <option value="{{ $u->id }}">{{ $u->nama }}</option>
                                         @endforeach
                                     </select>
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="jabatan_id">Jabatan</label>
-                                    <select name="jabatan_id" class="form-control" required>
+                                    <label for="jabatan">Jabatan</label>
+                                    <select name="jabatan_id" class="tomselect" required>
                                         <option value="" disabled selected>Pilih Jabatan</option>
-                                        @foreach ($jabatan as $j)
-                                            <option value="{{ $j->id }}">{{ $j->nama_jabatan }}</option>
+                                        @foreach ($jabatan as $jab)
+                                            <option value="{{ $jab->id }}">{{ $jab->jabatan }}</option>
                                         @endforeach
                                     </select>
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="sk">SK</label>
-                                    <input type="file" name="sk" class="form-control" required>
+                                    <label for="SK">SK</label>
+                                    <input type="file" name="SK" class="form-control" accept=".pdf">
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -328,6 +342,7 @@
             </form>
         </div>
     </div>
+
 @stop
 @section('adminlte_js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -369,25 +384,18 @@
         }
     </script>
 
+    {{-- pegawai select --}}
     <script>
-        // Fungsi untuk inisialisasi Tom Select pada elemen tertentu
-        function initTomSelect(selector) {
-            new TomSelect(selector, {
-                create: false,
-                sortField: {
-                    field: "text",
-                    direction: "asc"
-                },
-                placeholder: "Pilih Pegawai...",
-                searchField: ["text"], // bisa diubah tergantung struktur option
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.tomselect').forEach(function(element) {
+                new TomSelect(element, {
+                    create: false,
+                    sortField: {
+                        field: "text",
+                        direction: "asc"
+                    }
+                });
             });
-        }
-
-        // Inisialisasi untuk kedua dropdown
-        document.addEventListener("DOMContentLoaded", function() {
-            initTomSelect("#pegawaiDropdown");
-            initTomSelect("#pegawaiDropdownEdit");
         });
     </script>
-
 @stop

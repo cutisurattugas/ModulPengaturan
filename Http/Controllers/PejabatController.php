@@ -21,7 +21,7 @@ class PejabatController extends Controller
     public function index(Request $request)
     {
         $unit = Unit::all();
-        $jabatan = Jabatan::where('tipe_jabatan', 'Struktural')->get();
+        $jabatan = Jabatan::all();
         $pejabat = Pejabat::paginate(10);
         $pegawai = Pegawai::orderBy('nama', 'asc')->get();
 
@@ -46,31 +46,31 @@ class PejabatController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'pegawai_username' => 'required',
-            'periode_mulai' => 'required|date',
-            'periode_selesai' => 'nullable|date|after_or_equal:periode_mulai',
-            'status' => 'required|boolean',
-            'jabatan_id' => 'required|exists:jabatan,id',
-            'sk' => 'required|file|mimes:pdf|max:2048',
+            'pegawai_id' => 'required|exists:pegawais,id',
+            'mulai' => 'required|date',
+            'selesai' => 'nullable|date|after_or_equal:mulai',
+            'status' => 'required|in:Aktif,Non Aktif',
+            'jabatan_id' => 'required|exists:jabatans,id',
+            'SK' => 'required|file|mimes:pdf|max:2048',
+            'unit_id' => 'nullable|exists:units,id',
         ]);
 
-        if ($request->hasFile('sk')) {
-            $file = $request->file('sk');
+        if ($request->hasFile('SK')) {
+            $file = $request->file('SK');
             $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('uploads/sk', $fileName, 'public');
+            $filePath = $file->storeAs('uploads/SK', $fileName, 'public');
         } else {
             return back()->with('error', 'File SK wajib diunggah.');
         }
 
         Pejabat::create([
-            'pegawai_username' => $request->pegawai_username,
-            'nip' => Pegawai::where('username', $request->pegawai_username)->first()->nip ?? '-',
-            'periode_mulai' => $request->periode_mulai,
-            'periode_selesai' => $request->periode_selesai,
+            'pegawai_id' => $request->pegawai_id,
+            'mulai' => $request->mulai,
+            'selesai' => $request->selesai,
             'status' => $request->status,
             'unit_id' => $request->unit_id,
             'jabatan_id' => $request->jabatan_id,
-            'sk' => $filePath,
+            'SK' => $filePath,
         ]);
 
         return redirect()->back()->with('success', 'Pejabat berhasil ditambahkan.');
@@ -105,37 +105,42 @@ class PejabatController extends Controller
     public function update(Request $request, $id)
     {
         $pejabat = Pejabat::findOrFail($id);
+
         $request->validate([
-            'pegawai_username' => 'required',
-            'periode_mulai' => 'required|date',
-            'periode_selesai' => 'nullable|date',
-            'status' => 'required|in:0,1',
+            'pegawai_id' => 'required|exists:pegawais,id',
+            'mulai' => 'required|date',
+            'selesai' => 'nullable|date|after_or_equal:mulai',
+            'status' => 'required|in:Aktif,Non Aktif',
+            'jabatan_id' => 'required|exists:jabatans,id',
+            'SK' => 'nullable|file|mimes:pdf|max:2048', // Tidak wajib mengunggah ulang file
             'unit_id' => 'nullable|exists:units,id',
-            'jabatan_id' => 'required|exists:jabatan,id',
-            'sk' => 'nullable|mimes:pdf|max:2048',
         ]);
 
         $data = [
-            'pegawai_username' => $request->pegawai_username,
-            'nip' => Pegawai::where('username', $request->pegawai_username)->first()->nip ?? '-',
-            'periode_mulai' => $request->periode_mulai,
-            'periode_selesai' => $request->periode_selesai,
+            'pegawai_id' => $request->pegawai_id,
+            'mulai' => $request->mulai,
+            'selesai' => $request->selesai,
             'status' => $request->status,
             'unit_id' => $request->unit_id,
             'jabatan_id' => $request->jabatan_id,
         ];
 
-        if ($request->hasFile('sk')) {
-            if ($pejabat->sk && Storage::exists('public/uploads/sk/' . $pejabat->sk)) {
-                Storage::delete('public/uploads/sk/' . $pejabat->sk);
+        // Update file SK jika ada yang baru
+        if ($request->hasFile('SK')) {
+            // Hapus file lama jika ada
+            if ($pejabat->SK && Storage::exists('public/' . $pejabat->SK)) {
+                Storage::delete('public/' . $pejabat->SK);
             }
 
-            $file = $request->file('sk');
+            // Upload file baru
+            $file = $request->file('SK');
             $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('public/uploads/sk', $fileName);
-            $data['sk'] = 'uploads/sk/' . $fileName;
+            $filePath = $file->storeAs('uploads/SK', $fileName, 'public');
+
+            $data['SK'] = $filePath;
         }
 
+        // Update data ke database
         $pejabat->update($data);
 
         return redirect()->back()->with('success', 'Data Pejabat berhasil diperbarui.');

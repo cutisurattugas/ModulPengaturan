@@ -18,7 +18,7 @@ class AnggotaController extends Controller
 
         Anggota::create([
             'tim_kerja_id' => $request->tim_kerja_id,
-            'pegawai_username' => $request->pegawai_username,
+            'pegawai_id' => $request->pegawai_id,
             'peran' => 'Anggota'
         ]);
 
