@@ -9,9 +9,9 @@ class Jabatan extends Model
 {
     use HasFactory;
 
-    protected $table = 'jabatan';
+    protected $table = 'jabatans';
     protected $primaryKey = 'id';
-    protected $fillable = ['nama_jabatan', 'tipe_jabatan'];
+    protected $fillable = ['jabatan', 'role'];
 
     public function pejabat()
     {

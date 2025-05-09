@@ -12,7 +12,7 @@ class Pegawai extends Model
 {
     use HasFactory;
 
-    protected $table = 'pegawai';
+    protected $table = 'pegawais';
     protected $primaryKey = 'id';
     protected $fillable = [
         'nip',
@@ -35,8 +35,7 @@ class Pegawai extends Model
 
     public function timKerjaAnggota()
     {
-        return $this->belongsToMany(TimKerja::class, 'tim_kerja_anggota', 'pegawai_username', 'tim_kerja_id', 'username',                  // primary key lokal (model Pegawai)
-        'id')->withPivot('peran');
+        return $this->belongsToMany(TimKerja::class, 'tim_kerja_anggota', 'pegawai_id', 'tim_kerja_id')->withPivot('peran');
     }
 
     public function anggota(){
@@ -45,7 +44,7 @@ class Pegawai extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'username', 'username');
     }
 
     public function pejabat(){

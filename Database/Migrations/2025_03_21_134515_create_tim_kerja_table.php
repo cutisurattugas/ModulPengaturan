@@ -21,7 +21,7 @@ class CreateTimKerjaTable extends Migration
             $table->timestamps();
 
             $table->foreign('parent_id')->references('id')->on('tim_kerja')->onDelete('cascade');
-            $table->foreign('ketua_id')->references('id')->on('pejabat')->onDelete('set null');
+            $table->foreign('ketua_id')->references('id')->on('pejabats')->onDelete('set null');
             $table->foreign('unit_id')->references('id')->on('units')->onDelete('set null');
         });
     }

@@ -27,7 +27,7 @@
                                 <center>Nama </center>
                             </th>
                             <th>
-                                <center>Tipe </center>
+                                <center>Role </center>
                             </th>
                             <th colspan="2">
                                 <center>Opsi</center>
@@ -39,10 +39,14 @@
                                     <center>{{ $loop->iteration }}</center>
                                 </td>
                                 <td>
-                                    {{ $items->nama_jabatan }}
+                                    {{ $items->jabatan }}
                                 </td>
                                 <td>
-                                    {{ $items->tipe_jabatan }}
+                                    @if ($items->role == null)
+                                        <center><p>-</p></center>
+                                    @elseif($items->role != null)
+                                        {{$items->role}}
+                                    @endif
                                 </td>
                                 <td>
                                     <center>
@@ -65,7 +69,6 @@
                                 </td>
                             </tr>
                             <!-- Modal Edit Jabatan -->
-                            <!-- Modal Edit Jabatan -->
                             <div class="modal fade" id="modalEditJabatan{{ $items->id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="modalEditJabatanLabel{{ $items->id }}" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
@@ -85,21 +88,12 @@
 
                                                 <div class="form-group">
                                                     <label for="nama">Nama Jabatan</label>
-                                                    <input type="text" name="nama_jabatan" class="form-control"
-                                                        value="{{ $items->nama_jabatan }}" required>
+                                                    <input type="text" name="jabatan" id="nama" class="form-control"
+                                                        value="{{ $items->jabatan }}" required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="tipe_jabatan">Tipe Jabatan</label>
-                                                    <select class="form-control" name="tipe_jabatan" id="tipe_jabatan"
-                                                        required>
-                                                        <option value="">Pilih Tipe Jabatan</option>
-                                                        <option value="fungsional"
-                                                            {{ $items->tipe_jabatan == 'fungsional' ? 'selected' : '' }}>
-                                                            Fungsional</option>
-                                                        <option value="struktural"
-                                                            {{ $items->tipe_jabatan == 'struktural' ? 'selected' : '' }}>
-                                                            Struktural</option>
-                                                    </select>
+                                                    <label for="role">Role</label>
+                                                    <input type="text" class="form-control" id="role" value="{{$items->role}}">
                                                 </div>
 
                                             </div>
@@ -139,16 +133,12 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="nama">Nama Jabatan</label>
-                            <input type="text" name="nama_jabatan" class="form-control"
-                                placeholder="Masukkan Nama Jabatan" required>
+                            <input type="text" name="jabatan" class="form-control"
+                                placeholder="Masukkan Nama Jabatan" id="nama" required>
                         </div>
                         <div class="form-group">
-                            <label for="nama">Deskripsi</label>
-                            <select class="form-control" name="tipe_jabatan" id="tipe_jabatan">
-                                <option value="">Pilih Tipe Jabatan</option>
-                                <option value="fungsional">Fungsional</option>
-                                <option value="struktural">Struktural</option>
-                            </select>
+                            <label for="role">Role</label>
+                            <input type="text" id="role">
                         </div>
                     </div>
                     <div class="modal-footer">

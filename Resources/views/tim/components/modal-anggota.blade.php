@@ -29,10 +29,10 @@
                     <!-- Nama Tim -->
                     <div class="form-group">
                         <label>Pegawai</label>
-                        <select class="form-control" name="pegawai_username">
+                        <select class="form-control" name="pegawai_id">
                             <option value="">- Pilih Pegawai -</option>
                             @foreach ($pegawai as $item)
-                            <option value="{{ $item->username }}">{{ $item->nama }}</option>
+                            <option value="{{ $item->id }}">{{ $item->nama }}</option>
                             @endforeach
                         </select>
                     </div>

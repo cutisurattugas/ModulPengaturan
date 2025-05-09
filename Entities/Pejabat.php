@@ -9,9 +9,9 @@ class Pejabat extends Model
 {
     use HasFactory;
 
-    protected $table = 'pejabat';
+    protected $table = 'pejabats';
     protected $primaryKey = 'id';
-    protected $fillable = ['periode_mulai', 'periode_selesai', 'status', 'sk', 'nip', 'pegawai_username','unit_id', 'jabatan_id'];
+    protected $fillable = ['jabatan_id', 'mulai', 'selesai', 'SK', 'pegawai_id','unit_id', 'status'];
 
     public function unit()
     {
@@ -29,6 +29,6 @@ class Pejabat extends Model
     }
 
     public function pegawai(){
-        return $this->belongsTo(Pegawai::class, 'pegawai_username', 'username');
+        return $this->belongsTo(Pegawai::class, 'pegawai_id', 'id');
     }
 }
