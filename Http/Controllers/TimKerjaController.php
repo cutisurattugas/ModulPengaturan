@@ -66,9 +66,9 @@ class TimKerjaController extends Controller
                 return back()->withErrors(['ketua' => 'Format ketua tidak valid.']);
             }
             $pejabat_id = $data[0];
-            $pegawai_username = $data[1];
+            $pegawai_id = $data[1];
 
-            DB::transaction(function () use ($request, $pegawai_username, $pejabat_id) {
+            DB::transaction(function () use ($request, $pegawai_id, $pejabat_id) {
                 $timKerja = TimKerja::create([
                     'unit_id' => $request->unit_id,
                     'parent_id' => $request->parent_id,
@@ -77,7 +77,7 @@ class TimKerjaController extends Controller
 
                 Anggota::create([
                     'tim_kerja_id' => $timKerja->id,
-                    'pegawai_username' => $pegawai_username,
+                    'pegawai_id' => $pegawai_id,
                     'peran' => $pejabat_id ? 'Ketua' : null,
                 ]);
             });

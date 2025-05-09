@@ -36,13 +36,13 @@ class JabatanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_jabatan' => 'required|string|max:255',
-            'tipe_jabatan' => 'required',
+            'jabatan' => 'required|string|max:255',
+            'role' => 'nullable',
         ]);
 
         Jabatan::create([
-            'nama_jabatan' => $request->nama_jabatan,
-            'tipe_jabatan' => $request->tipe_jabatan,
+            'jabatan' => $request->jabatan,
+            'role' => $request->role,
         ]);
         return redirect()->back()->with('success', 'Jabatan berhasil ditambahkan!');
     }
@@ -77,8 +77,8 @@ class JabatanController extends Controller
     {
         $jabatan = Jabatan::findOrFail($id);
         $jabatan->update([
-            'nama_jabatan' => $request->nama_jabatan,
-            'tipe_jabatan' => $request->tipe_jabatan,
+            'jabatan' => $request->jabatan,
+            'role' => $request->role,
         ]);
         return redirect()->back()->with('success', 'Jabatan berhasil diperbarui!');
     }

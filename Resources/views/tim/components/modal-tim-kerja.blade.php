@@ -44,7 +44,7 @@
                         <select name="ketua_id" class="form-control" required>
                             <option value="">- Pilih Ketua -</option>
                             @foreach ($pejabat as $p)
-                                <option value="{{ $p->id }}|{{ $p->pegawai_username }}">
+                                <option value="{{ $p->id }}|{{ $p->pegawai_id }}">
                                     {{ $p->pegawai->gelar_dpn ?? '' }}{{ $p->pegawai->gelar_dpn ? ' ' : '' }}{{ $p->pegawai->nama }}{{ $p->pegawai->gelar_blk ? ', ' . $p->pegawai->gelar_blk : '' }}
                                 </option>
                             @endforeach
