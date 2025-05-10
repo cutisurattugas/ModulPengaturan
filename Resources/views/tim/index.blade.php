@@ -85,7 +85,7 @@
                             <br>
                             <small>
                                 {{ $ketuaUtama->pegawai->nip }} |
-                                {{ $ketuaUtama->jabatan->nama_jabatan }} |
+                                {{ $ketuaUtama->jabatan->jabatan }} |
                                 Sudah Buat SKP dengan Peran Ini
                             </small>
                         </td>
