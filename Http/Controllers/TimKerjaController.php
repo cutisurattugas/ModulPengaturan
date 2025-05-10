@@ -166,7 +166,7 @@ class TimKerjaController extends Controller
             // Baris kedua: detail nip dan jabatan
             if ($unitInduk->ketua) {
                 $html .= '<div class="mt-1">';
-                $html .= '<small>' . $unitInduk->ketua->pegawai->nip . ' | ' . ($unitInduk->ketua->jabatan->nama_jabatan ?? '-') . ' | Sudah Buat SKP dengan Peran Ini</small>';
+                $html .= '<small>' . $unitInduk->ketua->pegawai->nip . ' | ' . ($unitInduk->ketua->jabatan->jabatan ?? '-') . ' | Sudah Buat SKP dengan Peran Ini</small>';
                 $html .= '</div>';
             }
 

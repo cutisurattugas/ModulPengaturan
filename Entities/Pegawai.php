@@ -5,6 +5,7 @@ namespace Modules\Pengaturan\Entities;
 use App\Models\Core\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Cuti\Entities\Cuti;
 use Modules\Penilaian\Entities\RencanaKerja;
 
 class Pegawai extends Model
@@ -67,5 +68,10 @@ class Pegawai extends Model
             ->flatten()
             ->unique('id')
             ->values();
+    }
+
+    public function cuti()
+    {
+        return $this->hasMany(Cuti::class, 'pegawai_id');
     }
 }
