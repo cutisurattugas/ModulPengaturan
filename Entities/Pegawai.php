@@ -6,6 +6,7 @@ use App\Models\Core\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Penilaian\Entities\Cascading;
+use Modules\Cuti\Entities\Cuti;
 use Modules\Penilaian\Entities\RencanaKerja;
 
 class Pegawai extends Model
@@ -39,7 +40,7 @@ class Pegawai extends Model
     }
 
     public function anggota(){
-        return $this->hasOne(Anggota::class, 'pegawai_username', 'username');
+        return $this->hasOne(Anggota::class, 'pegawai_id', 'id');
     }
 
     public function user()
@@ -52,7 +53,7 @@ class Pegawai extends Model
     }
 
     public function rencanakerja(){
-        return $this->hasMany(RencanaKerja::class, 'pegawai_username', 'username');
+        return $this->hasMany(RencanaKerja::class, 'pegawai_id', 'id');
     }
 
     public function timKerjaKetua(){
@@ -72,6 +73,10 @@ class Pegawai extends Model
 
     public function cascading()
     {
-        return $this->hasMany(Cascading::class, 'pegawai_username', 'username');
+        return $this->hasMany(Cascading::class, 'pegawai_id', 'id');
+    }
+    public function cuti()
+    {
+        return $this->hasMany(Cuti::class, 'pegawai_id');
     }
 }
