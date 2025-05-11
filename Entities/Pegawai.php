@@ -5,6 +5,7 @@ namespace Modules\Pengaturan\Entities;
 use App\Models\Core\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Penilaian\Entities\Cascading;
 use Modules\Cuti\Entities\Cuti;
 use Modules\Penilaian\Entities\RencanaKerja;
 
@@ -30,7 +31,7 @@ class Pegawai extends Model
 
     public function timKerja()
     {
-        return $this->belongsToMany(TimKerja::class, 'tim_kerja_anggota')->withPivot('peran');
+        return $this->hasMany(TimKerja::class, 'tim_kerja_anggota', 'pegawai_username')->withPivot('peran');
     }
 
     public function timKerjaAnggota()
@@ -39,12 +40,12 @@ class Pegawai extends Model
     }
 
     public function anggota(){
-        return $this->hasOne(Anggota::class);
+        return $this->hasOne(Anggota::class, 'pegawai_id', 'id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'username', 'username');
     }
 
     public function pejabat(){
@@ -52,7 +53,7 @@ class Pegawai extends Model
     }
 
     public function rencanakerja(){
-        return $this->hasMany(RencanaKerja::class);
+        return $this->hasMany(RencanaKerja::class, 'pegawai_id', 'id');
     }
 
     public function timKerjaKetua(){
@@ -70,6 +71,10 @@ class Pegawai extends Model
             ->values();
     }
 
+    public function cascading()
+    {
+        return $this->hasMany(Cascading::class, 'pegawai_id', 'id');
+    }
     public function cuti()
     {
         return $this->hasMany(Cuti::class, 'pegawai_id');
