@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Penilaian\Entities\Cascading;
 use Modules\Cuti\Entities\Cuti;
+use Modules\Penilaian\Entities\PeriodeAktif;
 use Modules\Penilaian\Entities\RencanaKerja;
 
 class Pegawai extends Model
@@ -78,5 +79,9 @@ class Pegawai extends Model
     public function cuti()
     {
         return $this->hasMany(Cuti::class, 'pegawai_id');
+    }
+
+    public function periodeAktif(){
+        return $this->hasOne(PeriodeAktif::class);
     }
 }
