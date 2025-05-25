@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Penilaian\Entities\Cascading;
 use Modules\Cuti\Entities\Cuti;
 use Modules\Penilaian\Entities\RencanaKerja;
+use Modules\SuratTugas\Entities\AnggotaSuratTugas;
 use Modules\SuratTugas\Entities\SuratTugas;
 use Modules\SuratTugas\Entities\SuratTugasAnggota;
 
@@ -87,6 +88,6 @@ class Pegawai extends Model
 
     public function suratTugas()
     {
-        return $this->hasManyThrough(SuratTugas::class, SuratTugasAnggota::class, 'pegawai_id', 'id', 'id', 'surat_tugas_id');
+        return $this->hasManyThrough(SuratTugas::class, AnggotaSuratTugas::class, 'pegawai_id', 'id', 'id', 'surat_tugas_id');
     }
 }
