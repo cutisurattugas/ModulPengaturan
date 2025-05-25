@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Cuti\Entities\Cuti;
 use Modules\Penilaian\Entities\RencanaKerja;
+use Modules\SuratTugas\Entities\SuratTugas;
+use Modules\SuratTugas\Entities\SuratTugasAnggota;
 
 class Pegawai extends Model
 {
@@ -38,7 +40,8 @@ class Pegawai extends Model
         return $this->belongsToMany(TimKerja::class, 'tim_kerja_anggota', 'pegawai_id', 'tim_kerja_id')->withPivot('peran');
     }
 
-    public function anggota(){
+    public function anggota()
+    {
         return $this->hasOne(Anggota::class);
     }
 
@@ -47,20 +50,24 @@ class Pegawai extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function pejabat(){
+    public function pejabat()
+    {
         return $this->hasOne(Pejabat::class);
     }
 
-    public function rencanakerja(){
+    public function rencanakerja()
+    {
         return $this->hasMany(RencanaKerja::class);
     }
 
-    public function timKerjaKetua(){
+    public function timKerjaKetua()
+    {
         return $this->belongsToMany(TimKerja::class, 'tim_kerja_anggota')
             ->wherePivot('peran', 'Ketua');
     }
 
-    public function bawahan(){
+    public function bawahan()
+    {
         return $this->timKerjaKetua()
             ->with('anggota')
             ->get()
@@ -73,5 +80,10 @@ class Pegawai extends Model
     public function cuti()
     {
         return $this->hasMany(Cuti::class, 'pegawai_id');
+    }
+
+    public function suratTugas()
+    {
+        return $this->hasManyThrough(SuratTugas::class, SuratTugasAnggota::class, 'pegawai_id', 'id', 'id', 'surat_tugas_id');
     }
 }
