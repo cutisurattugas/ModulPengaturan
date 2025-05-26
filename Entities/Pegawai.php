@@ -9,6 +9,9 @@ use Modules\Penilaian\Entities\Cascading;
 use Modules\Cuti\Entities\Cuti;
 use Modules\Penilaian\Entities\PeriodeAktif;
 use Modules\Penilaian\Entities\RencanaKerja;
+use Modules\SuratTugas\Entities\AnggotaSuratTugas;
+use Modules\SuratTugas\Entities\SuratTugas;
+use Modules\SuratTugas\Entities\SuratTugasAnggota;
 
 class Pegawai extends Model
 {
@@ -49,7 +52,8 @@ class Pegawai extends Model
         return $this->belongsTo(User::class, 'username', 'username');
     }
 
-    public function pejabat(){
+    public function pejabat()
+    {
         return $this->hasOne(Pejabat::class);
     }
 
@@ -57,12 +61,14 @@ class Pegawai extends Model
         return $this->hasMany(RencanaKerja::class, 'pegawai_id', 'id');
     }
 
-    public function timKerjaKetua(){
+    public function timKerjaKetua()
+    {
         return $this->belongsToMany(TimKerja::class, 'tim_kerja_anggota')
             ->wherePivot('peran', 'Ketua');
     }
 
-    public function bawahan(){
+    public function bawahan()
+    {
         return $this->timKerjaKetua()
             ->with('anggota')
             ->get()
@@ -83,5 +89,10 @@ class Pegawai extends Model
 
     public function periodeAktif(){
         return $this->hasOne(PeriodeAktif::class);
+    }
+
+    public function suratTugas()
+    {
+        return $this->hasManyThrough(SuratTugas::class, AnggotaSuratTugas::class, 'pegawai_id', 'id', 'id', 'surat_tugas_id');
     }
 }
